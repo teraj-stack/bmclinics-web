@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontakt | BM Clinics — Klinika Chirurgiczna</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-primary: #151411;
+      --text-primary: #f4f1ea;
+      --text-muted: #a39e93;
+      --metal-gold: #d4af37;
+      --metal-chrome: #eef2f6;
+      --metal-steel: #b0b8c1;
+      --border-color: rgba(255,255,255,0.14);
+      --font-fraunces: 'Fraunces', Georgia, serif;
+      --font-montserrat: 'Montserrat', system-ui, sans-serif;
+    }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-montserrat);
+      margin: 0;
+    }
+    .font-serif-display { font-family: var(--font-fraunces); }
+    .site-header-glass {
+      background: rgba(18, 17, 14, 0.86);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #e5c453 0%, #c59b27 50%, #9f7916 100%);
+      color: #12110e;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.28);
+      transition: all 0.2s ease;
+    }
+    .btn-gold:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .metal-gold-edge {
+      border: 1px solid rgba(212, 175, 55, 0.38);
+      box-shadow: inset 0 1px 0 rgba(255, 235, 160, 0.18), 0 12px 32px rgba(0,0,0,0.45);
+    }
+    .metal-chrome-edge {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 28px rgba(0,0,0,0.4);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 1rem;
+      backdrop-filter: blur(12px);
+    }
+    .text-brushed-gold { color: #d4af37; }
+    [contenteditable="true"] {
+      outline: 2px dashed #d4af37 !important;
+      outline-offset: 3px;
+      border-radius: 4px;
+      cursor: text !important;
+    }
+  </style>
+</head>
+<body class="flex min-h-screen flex-col antialiased" data-page-id="kontakt">
+  <!-- Header -->
+  <header class="sticky top-0 z-50 w-full site-header-glass" data-cms-ignore="true">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+      <a href="../index.html" class="flex items-center gap-3">
+        <img src="../brand/logo-bujok-medical-header.png" alt="Bujok Medical" class="h-11 w-auto object-contain" />
+      </a>
+      <nav class="hidden items-center gap-1 text-[13px] font-medium lg:flex">
+        <a href="../uslugi-proktologia.html" class="rounded-lg px-3 py-2 text-zinc-300 hover:bg-white/5 hover:text-white flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-[#d4af37]"></span>Proktologia</a>
+        <a href="../uslugi-zylaki.html" class="rounded-lg px-3 py-2 text-zinc-300 hover:bg-white/5 hover:text-white flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-sky-400"></span>Żylaki i naczynka</a>
+        <a href="../uslugi-chirurgia.html" class="rounded-lg px-3 py-2 text-zinc-300 hover:bg-white/5 hover:text-white flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-indigo-300"></span>Chirurgia Ogólna</a>
+        <a href="../cennik.html" class="rounded-lg px-3 py-2 text-zinc-300 hover:bg-white/5 hover:text-white">Cennik</a>
+        <a href="../sklep.html" class="rounded-lg px-3 py-2 text-zinc-300 hover:bg-white/5 hover:text-white">Sklep zabiegowy</a>
+        <a href="../o-nas.html" class="rounded-lg px-3 py-2 text-zinc-300 hover:bg-white/5 hover:text-white">O nas</a>
+        <a href="../kontakt.html" class="rounded-lg px-3 py-2 text-zinc-300 hover:bg-white/5 hover:text-white">Kontakt</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="../logowanie.html" class="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-300 hover:text-white">
+          <img src="../brand/icon-strefa-serce.png" alt="" class="h-4 w-4 object-contain" />
+          <span>Strefa Pacjenta / Logowanie</span>
+        </a>
+        <a href="../rezerwacja.html" class="btn-gold rounded-lg px-3 py-1.5 text-xs">Umów wizytę</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    
+  <section class="mx-auto max-w-4xl space-y-6 px-4 py-14">
+    <p class="text-brushed-gold text-[11px] font-medium uppercase tracking-[0.2em]">Kontakt i dojazd</p>
+    <h1 class="font-serif-display text-3xl font-light">Skontaktuj się z rejestracją BM Clinics</h1>
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="glass-card space-y-4 p-6 text-sm">
+        <p class="font-semibold text-white">BM Clinics — Bujok Medical</p>
+        <p class="text-zinc-300">ul. Branickiego 10/U6<br/>02-972 Warszawa (Wilanów)</p>
+        <p class="text-zinc-300">Telefon: <a href="tel:+48510432361" data-cms-field="phone" class="font-semibold text-[#d4af37]">+48 510 432 361</a></p>
+        <p class="text-zinc-300">E-mail: kontakt@bujokmedical.pl</p>
+      </div>
+      <form onsubmit="event.preventDefault(); alert('Wiadomość została zapisana!');" class="glass-card space-y-3 p-6 text-xs">
+        <input required placeholder="Twój e-mail" class="w-full rounded-lg border border-white/15 bg-black/40 p-3 text-white" />
+        <textarea rows="4" required placeholder="Treść wiadomości..." class="w-full rounded-lg border border-white/15 bg-black/40 p-3 text-white"></textarea>
+        <button type="submit" class="btn-gold w-full rounded-lg py-3 font-semibold">Wyślij wiadomość</button>
+      </form>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 bg-[#100f0c] px-4 py-12 text-xs text-zinc-400">
+    <div class="mx-auto flex max-w-6xl flex-col justify-between gap-6 sm:flex-row sm:items-center">
+      <div>
+        <p class="font-serif-display text-base text-white">BM Clinics — dr Jan Bujok</p>
+        <p class="mt-1">Warszawa Wilanów, ul. Branickiego 10/U6 • Tel. <span data-cms-field="phone">+48 510 432 361</span></p>
+      </div>
+      <div class="flex flex-wrap gap-4">
+        <a href="../index.html" class="hover:text-white">Strona główna</a>
+        <a href="../cennik.html" class="hover:text-white">Cennik</a>
+        <a href="../sklep.html" class="hover:text-white">Sklep</a>
+        <a href="../logowanie.html" class="hover:text-white">Logowanie</a>
+        <a href="../admin.html" class="hover:text-[#d4af37]">Panel Admina & CMS</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Built-in Live Visual Editor & Offline/Online CMS Engine -->
+  <div id="bm-live-studio" data-cms-ignore="true" class="fixed right-4 bottom-4 z-50 flex flex-wrap items-center gap-2 rounded-2xl border border-white/15 bg-[#12110e]/95 p-2 text-xs text-white shadow-2xl backdrop-blur-xl">
+    <button id="btn-toggle-inline" type="button" class="flex items-center gap-1.5 rounded-xl bg-white/10 px-3.5 py-2 font-medium text-white hover:bg-white/15 transition">
+      <span class="h-2 w-2 rounded-full bg-[#d4af37]"></span>
+      <span id="lbl-toggle-inline">Edytuj tekst na żywo</span>
+    </button>
+    <button id="btn-open-cms" type="button" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-medium text-zinc-200 hover:bg-white/10">
+      Panel CMS & Cennik
+    </button>
+    <button id="btn-download-html" type="button" class="rounded-xl border border-[#d4af37]/40 bg-[#d4af37]/15 px-3 py-2 font-medium text-[#f4e7c3] hover:bg-[#d4af37]/25">
+      Zapisz kopię HTML (Offline)
+    </button>
+    <a href="../logowanie.html" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-zinc-300 hover:bg-white/10">Logowanie</a>
+  </div>
+
+  <!-- CMS Drawer Modal -->
+  <div id="bm-cms-drawer" data-cms-ignore="true" class="fixed inset-0 z-50 hidden justify-end bg-black/65 backdrop-blur-xs">
+    <div class="flex h-full w-full max-w-lg flex-col border-l border-white/15 bg-[#141310] p-6 text-xs text-zinc-100 shadow-2xl overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div>
+          <p class="text-[10px] font-semibold uppercase tracking-widest text-[#d4af37]">BM Clinics Studio (Online + Offline)</p>
+          <h3 class="text-base font-semibold text-white">Edytor Treści, Cennika i CLI</h3>
+        </div>
+        <button id="btn-close-cms" type="button" class="rounded-lg bg-white/10 px-3 py-1.5 text-white">Zamknij</button>
+      </div>
+      <div class="mt-4 space-y-4">
+        <div class="rounded-xl border border-[#d4af37]/30 bg-[#d4af37]/10 p-3 text-[#f4e7c3]">
+          Wszystkie zmiany są automatycznie zapisywane w pamięci przeglądarki (LocalStorage) oraz mogą zostać wyeksportowane jako gotowy plik HTML na dysk lokalny.
+        </div>
+        <label class="block space-y-1">
+          <span class="text-zinc-400">Telefon rejestracji</span>
+          <input id="cms-input-phone" value="+48 510 432 361" class="w-full rounded-lg border border-white/15 bg-black/50 p-2.5 text-white" />
+        </label>
+        <label class="block space-y-1">
+          <span class="text-zinc-400">Nagłówek sekcji Standard</span>
+          <input id="cms-input-title" value="Zabiegi ambulatoryjne bez długiej hospitalizacji" class="w-full rounded-lg border border-white/15 bg-black/50 p-2.5 text-white" />
+        </label>
+        <div class="flex gap-2 pt-2">
+          <button id="btn-save-cms-cfg" type="button" class="btn-gold flex-1 rounded-xl py-2.5 font-semibold text-black">Zapisz zmiany</button>
+          <button id="btn-reset-cms-cfg" type="button" class="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-red-300">Resetuj</button>
+        </div>
+        <div class="border-t border-white/10 pt-4">
+          <p class="font-semibold text-[#d4af37]">Komendy projektu CLI (Terminal):</p>
+          <pre class="mt-2 rounded-lg bg-black p-3 font-mono text-[11px] text-emerald-300 overflow-x-auto">npm run cli -- status
+npm run cli -- services
+npm run cli -- set-price konsultacja-proktologiczna 280
+npm run cli -- set-config phone "+48 510 432 361"</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const STORAGE_KEY = 'bmclinics_inline_edits_' + (document.body.dataset.pageId || 'default');
+      const GLOBAL_CFG_KEY = 'bmclinics_global_cfg_v1';
+      let inlineActive = new URLSearchParams(window.location.search).get('edit') === '1';
+
+      function getEditableNodes() {
+        const main = document.querySelector('main');
+        if (!main) return [];
+        return Array.from(main.querySelectorAll('h1, h2, h3, h4, p, span, a, td, th')).filter(el => {
+          if (el.closest('[data-cms-ignore]')) return false;
+          return !Array.from(el.children).some(c => ['DIV','SECTION','TABLE','FORM','IMG','SVG','INPUT','SELECT'].includes(c.tagName));
+        });
+      }
+
+      function applySavedEdits() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+          getEditableNodes().forEach((el, idx) => {
+            const key = el.dataset.cmsKey || ('node_' + idx);
+            el.dataset.cmsKey = key;
+            if (saved[key] !== undefined) el.textContent = saved[key];
+          });
+          const cfg = JSON.parse(localStorage.getItem(GLOBAL_CFG_KEY) || '{}');
+          if (cfg.phone) {
+            document.querySelectorAll('[data-cms-field="phone"]').forEach(el => el.textContent = cfg.phone);
+            const inp = document.getElementById('cms-input-phone');
+            if (inp) inp.value = cfg.phone;
+          }
+          if (cfg.standardTitle) {
+            document.querySelectorAll('[data-cms-field="standardTitle"]').forEach(el => el.textContent = cfg.standardTitle);
+            const inp = document.getElementById('cms-input-title');
+            if (inp) inp.value = cfg.standardTitle;
+          }
+        } catch (e) {}
+      }
+
+      function setInlineMode(active) {
+        inlineActive = active;
+        const btn = document.getElementById('btn-toggle-inline');
+        const lbl = document.getElementById('lbl-toggle-inline');
+        if (btn && lbl) {
+          btn.className = active
+            ? 'flex items-center gap-1.5 rounded-xl bg-[#d4af37] px-3.5 py-2 font-semibold text-black shadow-lg transition'
+            : 'flex items-center gap-1.5 rounded-xl bg-white/10 px-3.5 py-2 font-medium text-white hover:bg-white/15 transition';
+          lbl.textContent = active ? 'Zakończ i zapisz edycję' : 'Edytuj tekst na żywo';
+        }
+        getEditableNodes().forEach((el, idx) => {
+          const key = el.dataset.cmsKey || ('node_' + idx);
+          el.dataset.cmsKey = key;
+          if (active) {
+            el.setAttribute('contenteditable', 'true');
+            el.onclick = function(e) { e.preventDefault(); e.stopPropagation(); el.focus(); };
+            el.onblur = function() {
+              const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+              saved[key] = el.textContent.trim();
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+            };
+          } else {
+            el.removeAttribute('contenteditable');
+            el.onclick = null;
+          }
+        });
+      }
+
+      applySavedEdits();
+      if (inlineActive) setInlineMode(true);
+
+      document.getElementById('btn-toggle-inline')?.addEventListener('click', () => setInlineMode(!inlineActive));
+      document.getElementById('btn-open-cms')?.addEventListener('click', () => {
+        document.getElementById('bm-cms-drawer')?.classList.remove('hidden');
+        document.getElementById('bm-cms-drawer')?.classList.add('flex');
+      });
+      document.getElementById('btn-close-cms')?.addEventListener('click', () => {
+        document.getElementById('bm-cms-drawer')?.classList.add('hidden');
+        document.getElementById('bm-cms-drawer')?.classList.remove('flex');
+      });
+      document.getElementById('btn-save-cms-cfg')?.addEventListener('click', () => {
+        const phone = document.getElementById('cms-input-phone')?.value || '+48 510 432 361';
+        const standardTitle = document.getElementById('cms-input-title')?.value || '';
+        localStorage.setItem(GLOBAL_CFG_KEY, JSON.stringify({ phone, standardTitle }));
+        applySavedEdits();
+        document.getElementById('bm-cms-drawer')?.classList.add('hidden');
+      });
+      document.getElementById('btn-reset-cms-cfg')?.addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(GLOBAL_CFG_KEY);
+        window.location.reload();
+      });
+      document.getElementById('btn-download-html')?.addEventListener('click', () => {
+        const wasActive = inlineActive;
+        if (wasActive) setInlineMode(false);
+        const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = (document.body.dataset.pageId || 'bmclinics') + '-offline.html';
+        a.click();
+        if (wasActive) setInlineMode(true);
+      });
+    })();
+  </script>
+</body>
+</html>
