@@ -1,0 +1,1440 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand anchors */
+  --brand-black: #000000;
+  --brand-near-black: #1d1b16;
+  --brand-gold: #c4a874;
+  --brand-gold-bright: #d4c4a8;
+  --brand-gold-deep: #8b7355;
+
+  /* Metal / glass material tokens — one coherent language */
+  --metal-aluminium: #c5c9ce;
+  --metal-aluminium-deep: #8e949c;
+  --metal-chrome: #e8eaed;
+  --metal-chrome-hi: #f5f6f7;
+  --metal-chrome-edge: rgba(255, 255, 255, 0.55);
+  --metal-titanium: #6b6e73;
+  --metal-titanium-matte: #3a3c40;
+  --metal-titanium-deep: #2a2b2e;
+  --metal-steel: #a8b0b8;
+  --metal-steel-cool: #7a8490;
+  --metal-champagne: #d4c4a8;
+  --metal-bronze: #8b7355;
+  --metal-gold: #c4a874;
+  --metal-gold-bright: #d4c4a8;
+  --metal-gold-deep: #8b7355;
+
+  /* Fills — brushed gold grain (fine linear stripes) */
+  --grad-brushed-gold: repeating-linear-gradient(
+      105deg,
+      #d4c4a8 0px,
+      #c4a874 1.5px,
+      #b89a68 3px,
+      #c4a874 4.5px,
+      #8b7355 6px,
+      #c4a874 7.5px
+    ),
+    linear-gradient(135deg, #d4c4a8 0%, #c4a874 48%, #8b7355 100%);
+
+  /* Polished silver / chrome — cool specular */
+  --grad-polished-silver: linear-gradient(
+    135deg,
+    #f5f6f7 0%,
+    #e8eaed 18%,
+    #c5c9ce 42%,
+    #ffffff 52%,
+    #8e949c 72%,
+    #c5c9ce 100%
+  );
+
+  /* Titanium — matte, low specular */
+  --grad-titanium: linear-gradient(
+    160deg,
+    #6b6e73 0%,
+    #4a4c50 40%,
+    #3a3c40 70%,
+    #2a2b2e 100%
+  );
+
+  /* Liquid metals — multi-stop (animate via background-position) */
+  --grad-liquid-chrome: linear-gradient(
+    125deg,
+    #8e949c 0%,
+    #e8eaed 18%,
+    #ffffff 32%,
+    #c5c9ce 48%,
+    #6b6e73 62%,
+    #f5f6f7 78%,
+    #a8b0b8 100%
+  );
+  --grad-liquid-metal: linear-gradient(
+    125deg,
+    #3a3c40 0%,
+    #a8b0b8 22%,
+    #e8eaed 38%,
+    #6b6e73 55%,
+    #c5c9ce 72%,
+    #2a2b2e 100%
+  );
+  --grad-liquid-gold: linear-gradient(
+    125deg,
+    #8b7355 0%,
+    #c4a874 20%,
+    #f0e6d2 38%,
+    #d4c4a8 52%,
+    #a89060 68%,
+    #c4a874 84%,
+    #8b7355 100%
+  );
+
+  /* LED accents — secondary light on dark metal (not fill themes) */
+  --led-navy: #1e3a5f;
+  --led-navy-deep: #0a1628;
+  --led-navy-mid: #152a45;
+  --led-lavender: #7b6b9e;
+  --led-lavender-soft: #a78bfa;
+  --led-lavender-muted: #9b8bb8;
+  --led-glow-navy: rgba(30, 58, 95, 0.55);
+  --led-glow-navy-soft: rgba(30, 58, 95, 0.22);
+  --led-glow-lavender: rgba(167, 139, 250, 0.35);
+  --led-glow-lavender-soft: rgba(123, 107, 158, 0.2);
+
+  --glass-fill: radial-gradient(
+    ellipse at center,
+    rgba(20, 20, 20, 0.018) 0%,
+    rgba(0, 0, 0, 0.033) 100%
+  );
+  --glass-fill-light: radial-gradient(
+    ellipse at 40% 20%,
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(232, 234, 237, 0.55) 100%
+  );
+  --glass-blur: blur(12px) saturate(160%);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-inset: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+
+  /* Surface system (light) */
+  --bg-primary: #f4f3f1;
+  --card-bg: rgba(255, 255, 255, 0.72);
+  --text-primary: #1d1b16;
+  --text-muted: #6b6e73;
+  --accent-gold: #c4a874;
+  --accent-gold-dark: #8b7355;
+  --accent-gold-light: rgba(196, 168, 116, 0.14);
+  --border-color: rgba(61, 58, 52, 0.12);
+  --motion-duration: 0.25s;
+  --motion-enabled: 1;
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+  /* Sticky site header — used to pull home hero wallpaper under the glass bar */
+  --site-header-height: 4.0625rem;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --site-header-height: 5rem;
+  }
+}
+
+/* Keep in sync with Tailwind `dark:` (prefers-color-scheme) — without this,
+   dark:text-* flips while --card-bg / glass-panel stay light → unreadable UI. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg-primary: #0a0908;
+    --card-bg: rgba(29, 27, 22, 0.72);
+    --text-primary: #f1f0ed;
+    --text-muted: #a8b0b8;
+    --accent-gold: #c4a874;
+    --accent-gold-dark: #d4c4a8;
+    --accent-gold-light: rgba(196, 168, 116, 0.16);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --glass-fill: radial-gradient(
+      ellipse at center,
+      rgba(197, 201, 206, 0.04) 0%,
+      rgba(0, 0, 0, 0.28) 100%
+    );
+    --background: var(--bg-primary);
+    --foreground: var(--text-primary);
+  }
+}
+
+[data-theme='dark'] {
+  --bg-primary: #0a0908;
+  --card-bg: rgba(29, 27, 22, 0.72);
+  --text-primary: #f1f0ed;
+  --text-muted: #a8b0b8;
+  --accent-gold: #c4a874;
+  --accent-gold-dark: #d4c4a8;
+  --accent-gold-light: rgba(196, 168, 116, 0.16);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --glass-fill: radial-gradient(
+    ellipse at center,
+    rgba(197, 201, 206, 0.04) 0%,
+    rgba(0, 0, 0, 0.28) 100%
+  );
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+}
+
+[data-category='proktologia'] {
+  --cat-accent: #c4a874;
+  --cat-accent-dark: #8b7355;
+  --cat-accent-light: rgba(196, 168, 116, 0.14);
+  --cat-bg: #0f0e0c;
+  --cat-card-bg: #1d1b16;
+  --cat-text: #f1f0ed;
+}
+
+[data-category='zylaki-naczynka'] {
+  --cat-accent: #a8b0b8;
+  --cat-accent-dark: #7a8490;
+  --cat-accent-light: rgba(168, 176, 184, 0.14);
+  --cat-bg: #0c0e10;
+  --cat-card-bg: #1a1c1f;
+  --cat-text: #f1f0ed;
+}
+
+[data-category='chirurgia-ogolna'] {
+  --cat-accent: #d4c4a8;
+  --cat-accent-dark: #8b7355;
+  --cat-accent-light: rgba(212, 196, 168, 0.14);
+  --cat-bg: #100e0b;
+  --cat-card-bg: #1d1b16;
+  --cat-text: #f1f0ed;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-montserrat);
+  --font-display: var(--font-fraunces);
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-montserrat), system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  overflow-x: hidden;
+}
+
+/* Slim refined type utilities */
+.font-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.font-slim {
+  font-family: var(--font-montserrat), system-ui, sans-serif;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+/* Custom Glassmorphism Cards & Panels — metal-edged */
+.glass-card {
+  background: var(--glass-fill-light);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(142, 148, 156, 0.35);
+  border-radius: 1rem;
+  box-shadow:
+    var(--glass-inset),
+    0 4px 24px -4px rgba(29, 27, 22, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: transform var(--motion-duration) cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow var(--motion-duration) cubic-bezier(0.16, 1, 0.3, 1),
+    border-color var(--motion-duration) ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(196, 168, 116, 0.45);
+  box-shadow:
+    var(--glass-inset),
+    0 12px 36px -6px rgba(29, 27, 22, 0.14),
+    0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Specialty tiles = tinted glass plates; square; no scroll parallax */
+
+/* Home stack: hero photo (screen 1) then opaque Zakres band (screen 2) — never one section */
+[data-home-hero] {
+  /* Full-bleed lobby wallpaper — one viewport, pulled under sticky header */
+  position: relative;
+  height: 100dvh;
+  min-height: max(100dvh, 100svh);
+  margin: calc(-1 * var(--site-header-height)) 0 0;
+  padding: 0;
+  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: #000;
+}
+
+[data-home-hero] .home-hero-media,
+[data-home-hero] picture,
+[data-home-hero] img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+[data-home-hero] .home-hero-media {
+  position: absolute;
+  inset: 0;
+}
+
+[data-zakres-band] {
+  position: relative;
+  z-index: auto;
+  margin-top: 0;
+  background-color: #1d1b16;
+  background-image: none;
+  isolation: isolate;
+  overflow: visible;
+}
+
+/* Lift whole band above sticky header (z-50) while a plate is expanded */
+[data-zakres-band].has-expanded-plate {
+  z-index: 60;
+}
+
+/* Shared chassis (kafelek): solid black + chrome/LED metal frame — not frosted over hero */
+.zakres-segment {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: visible;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border-radius: 1.15rem;
+  border: 1px solid rgba(197, 201, 206, 0.28);
+  background: #000;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(232, 234, 237, 0.14),
+    0 0 0 1px rgba(30, 58, 95, 0.35),
+    0 0 28px -8px var(--led-glow-navy-soft),
+    0 12px 40px -16px rgba(0, 0, 0, 0.55);
+}
+
+.zakres-segment-head {
+  flex-shrink: 0;
+}
+
+/*
+ * Plate size: `%` only on `.zakres-plates` (row width). Never on the cell —
+ * that collapsed mobile squares to ~29×4px.
+ * Caps unchanged; gap subtractors match gap-8 / sm:gap-10 / lg:gap-12 (air for lift).
+ */
+.zakres-plates {
+  --zakres-plate-size: min(6.5rem, calc((100% - 4rem) / 3)); /* 104px cap */
+  align-items: start;
+  justify-content: center;
+  justify-items: center;
+  grid-template-columns: repeat(3, var(--zakres-plate-size));
+  min-width: 0;
+  overflow: visible;
+  perspective: 1200px;
+  /* Air for ~1.52 scale + -1.75rem lift so expand isn't clipped */
+  padding-block: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .zakres-plates {
+    --zakres-plate-size: min(8rem, calc((100% - 5rem) / 3)); /* 128px */
+    padding-block: 3rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .zakres-plates {
+    --zakres-plate-size: min(10rem, calc((100% - 5rem) / 3)); /* 160px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .zakres-plates {
+    --zakres-plate-size: min(12.5rem, calc((100% - 6rem) / 3)); /* 200px */
+    padding-block: 1.75rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .zakres-plates {
+    --zakres-plate-size: 14.5rem; /* 232px hard cap */
+  }
+}
+
+.zakres-glass {
+  position: relative;
+  display: flex;
+  /* Fill the sized grid track — stay square; no % size var on the cell */
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  min-width: 0;
+  min-height: 0;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  isolation: isolate;
+  z-index: 1;
+  transform-origin: center center;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease,
+    z-index 0s linear 0.45s;
+  cursor: pointer;
+  /* Fallback fill — specialty tones override below so plates never vanish on #1d1b16 */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(45, 38, 28, 0.94) 0%,
+    rgba(18, 16, 12, 0.98) 100%
+  );
+  border: 1px solid rgba(196, 168, 116, 0.38);
+  border-radius: 1rem;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -18px 36px -12px rgba(0, 0, 0, 0.42),
+    0 10px 36px -10px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Figma 3D UI Perspective — strong floating plate lift on select */
+.zakres-glass.is-expanded {
+  z-index: 70;
+  overflow: visible;
+  transform: translate3d(0, -1.75rem, 0) scale(1.52);
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease,
+    z-index 0s;
+  border-color: rgba(196, 168, 116, 0.78);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -18px 36px -12px rgba(0, 0, 0, 0.32),
+    0 0 40px -4px rgba(196, 168, 116, 0.32),
+    0 36px 72px -10px rgba(0, 0, 0, 0.88),
+    0 56px 96px -24px rgba(0, 0, 0, 0.75);
+}
+
+.zakres-glass:focus-visible {
+  outline: 2px solid rgba(196, 168, 116, 0.85);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zakres-glass,
+  .zakres-glass.is-expanded {
+    transition: none;
+  }
+
+  .zakres-glass.is-expanded {
+    transform: translate3d(0, -0.75rem, 0) scale(1.2);
+  }
+}
+
+/* Per-specialty tinted glass — readable on black band, brand-warm (not milky / purple) */
+.zakres-glass--proktologia {
+  /* Brushed green metal sheet — CSS fallback; TSX also mounts img.face + inline bg */
+  background-color: #0a1a14;
+  background-image: url('/brand/plate-proktologia-brushed-metal.webp?v=20260809metal1');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-color: rgba(196, 168, 116, 0.5);
+}
+
+/* Explicit metal face layer (above plate bg, below chrome) */
+.zakres-metal-face {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Lobby photo not used on Proktologia — metal graphic is the plate face */
+.zakres-glass--proktologia .zakres-window-screen {
+  display: none !important;
+}
+
+.zakres-glass--zylaki {
+  /* Diagonal brushed navy / bright steel — CSS fallback; TSX also mounts img.face + inline bg */
+  background-color: #0a1420;
+  background-image: url('/brand/plate-zylaki-vein-carpet.webp?v=20260809zylaki3');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-color: rgba(196, 168, 116, 0.42);
+}
+
+/* Lobby photo not used on Żylaki — brushed navy/steel graphic is the plate face */
+.zakres-glass--zylaki .zakres-window-screen {
+  display: none !important;
+}
+
+.zakres-glass--chirurgia {
+  /* Bright brushed steel — CSS fallback; TSX also mounts img.face + inline bg */
+  background-color: #9aa3ad;
+  background-image: url('/brand/plate-chirurgia-bright-steel.webp?v=20260809chirurgia1');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-color: rgba(196, 168, 116, 0.45);
+}
+
+/* Lobby photo not used on Chirurgia — bright steel graphic is the plate face */
+.zakres-glass--chirurgia .zakres-window-screen {
+  display: none !important;
+}
+
+/* Thick liquid-glass rim — depth/refraction, not milky fill */
+.zakres-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.zakres-glass:hover:not(.is-expanded) {
+  border-color: rgba(196, 168, 116, 0.62);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -18px 36px -12px rgba(0, 0, 0, 0.38),
+    0 0 24px -8px rgba(196, 168, 116, 0.22),
+    0 14px 40px -8px rgba(0, 0, 0, 0.55);
+}
+
+/* Static lobby texture behind tinted frost — clipped to plate */
+.zakres-window-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.35;
+}
+
+.zakres-window-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: none;
+}
+
+.zakres-window-frost {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  /* Shared dark glass wash — specialty fill behind carries the color */
+  background:
+    radial-gradient(
+      ellipse 120% 90% at 28% 12%,
+      rgba(196, 168, 116, 0.1) 0%,
+      rgba(20, 20, 20, 0.35) 42%,
+      rgba(0, 0, 0, 0.55) 100%
+    ),
+    radial-gradient(ellipse at center, rgba(20, 20, 20, 0.18) 0%, rgba(0, 0, 0, 0.4) 100%);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+}
+
+/*
+ * Previous frost (0.38–0.55 black over full plate) killed brushed-metal read —
+ * looked like the old solid dark glass. Metal plates use a light bottom scrim only.
+ */
+.zakres-glass--proktologia .zakres-window-frost,
+.zakres-glass--zylaki .zakres-window-frost,
+.zakres-window-frost--metal {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.52) 0%,
+    rgba(0, 0, 0, 0.22) 38%,
+    rgba(0, 0, 0, 0.04) 68%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Light steel needs a modestly stronger bottom scrim for white labels — metal stays visible above */
+.zakres-glass--chirurgia .zakres-window-frost,
+.zakres-glass--chirurgia .zakres-window-frost--metal {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.64) 0%,
+    rgba(0, 0, 0, 0.3) 36%,
+    rgba(0, 0, 0, 0.06) 62%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.zakres-glass:hover .zakres-window-frost {
+  opacity: 0.92;
+}
+
+.zakres-window-chrome {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.35rem;
+  padding: clamp(0.55rem, 1.6vw, 1.1rem);
+  overflow: hidden;
+}
+
+/* Soft light under text so solid black titles stay readable on dark metals */
+.zakres-glass--proktologia .zakres-window-chrome,
+.zakres-glass--zylaki .zakres-window-chrome {
+  background: radial-gradient(
+    ellipse 120% 95% at 40% 28%,
+    rgba(235, 245, 238, 0.42) 0%,
+    rgba(210, 230, 218, 0.18) 42%,
+    rgba(0, 0, 0, 0) 72%
+  );
+}
+
+.zakres-glass--chirurgia .zakres-window-chrome {
+  background: radial-gradient(
+    ellipse 120% 95% at 40% 28%,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(0, 0, 0, 0) 72%
+  );
+}
+
+.zakres-glass--proktologia.is-expanded .zakres-window-chrome {
+  background: radial-gradient(
+    ellipse 130% 100% at 45% 32%,
+    rgba(200, 245, 210, 0.62) 0%,
+    rgba(120, 200, 150, 0.32) 48%,
+    rgba(40, 120, 70, 0.08) 78%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.zakres-window-chrome h3 {
+  margin-top: 0.35rem;
+  font-size: clamp(1rem, 2.5vw, 1.6rem);
+  line-height: 1.15;
+}
+
+.zakres-window-chrome p {
+  margin-top: 0.25rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: clamp(0.75rem, 1.6vw, 0.95rem);
+}
+
+.zakres-window-chrome .zakres-window-foot {
+  margin-top: auto;
+  padding-top: 0.4rem;
+}
+
+/*
+ * Solid black letters on metal plates — liquid-chrome was unreadable.
+ * Soft light halo keeps edges legible on dark green / navy metals.
+ */
+.zakres-plate-title {
+  color: #000;
+  -webkit-text-fill-color: #000;
+  background: none;
+  background-image: none;
+  animation: none;
+  /* Light halo so black reads on dark green / navy metals */
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55),
+    0 -1px 0 rgba(255, 255, 255, 0.28),
+    1px 0 0 rgba(255, 255, 255, 0.28),
+    -1px 0 0 rgba(255, 255, 255, 0.28),
+    0 0 8px rgba(255, 255, 255, 0.45),
+    0 0 16px rgba(255, 255, 255, 0.28);
+}
+
+.zakres-plate-body,
+.zakres-plate-meta {
+  color: rgba(0, 0, 0, 0.92);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.4),
+    0 0 6px rgba(255, 255, 255, 0.35);
+}
+
+.zakres-glass.is-expanded .zakres-plate-title {
+  color: #000;
+  -webkit-text-fill-color: #000;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.75),
+    0 -1px 0 rgba(255, 255, 255, 0.45),
+    1px 0 0 rgba(255, 255, 255, 0.45),
+    -1px 0 0 rgba(255, 255, 255, 0.45),
+    0 0 10px rgba(255, 255, 255, 0.65),
+    0 0 22px rgba(255, 255, 255, 0.4);
+}
+
+.zakres-glass.is-expanded .zakres-plate-body,
+.zakres-glass.is-expanded .zakres-plate-meta {
+  color: #000;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55),
+    0 0 10px rgba(255, 255, 255, 0.45);
+}
+
+/* Expanded Proktologia — dark-green neon rim + inner green wash */
+.zakres-glass--proktologia.is-expanded {
+  --zakres-neon-green: #0d4a2c;
+  --zakres-neon-green-mid: #146b3e;
+  --zakres-neon-green-soft: rgba(20, 110, 65, 0.55);
+  border-color: rgba(18, 90, 50, 0.95);
+  box-shadow:
+    0 0 0 1px rgba(13, 74, 44, 0.95),
+    0 0 10px 1px rgba(16, 90, 48, 0.85),
+    0 0 22px 4px rgba(12, 70, 40, 0.65),
+    0 0 40px 8px rgba(10, 55, 32, 0.4),
+    inset 0 0 0 1px rgba(40, 150, 90, 0.55),
+    inset 0 0 18px 2px rgba(30, 120, 70, 0.42),
+    inset 0 0 42px 8px rgba(18, 85, 50, 0.28),
+    inset 0 1px 0 rgba(120, 200, 150, 0.22),
+    0 36px 72px -10px rgba(0, 0, 0, 0.88),
+    0 56px 96px -24px rgba(0, 0, 0, 0.75);
+}
+
+.zakres-glass--proktologia.is-expanded .zakres-window-frost,
+.zakres-glass--proktologia.is-expanded .zakres-window-frost--metal {
+  /* Brighter inner green wash — lifts the text field so black letters pop */
+  background:
+    radial-gradient(
+      ellipse 95% 85% at 50% 38%,
+      rgba(110, 200, 140, 0.55) 0%,
+      rgba(48, 150, 90, 0.38) 38%,
+      rgba(22, 90, 55, 0.16) 68%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.22) 0%,
+      rgba(0, 0, 0, 0.06) 42%,
+      rgba(0, 0, 0, 0) 100%
+    );
+}
+
+/* Expanded Żylaki — subtle cool blue neon */
+.zakres-glass--zylaki.is-expanded {
+  border-color: rgba(40, 90, 150, 0.85);
+  box-shadow:
+    0 0 0 1px rgba(30, 70, 120, 0.8),
+    0 0 14px 2px rgba(40, 100, 170, 0.45),
+    0 0 28px 6px rgba(25, 60, 110, 0.28),
+    inset 0 0 0 1px rgba(90, 150, 210, 0.35),
+    inset 0 0 28px 4px rgba(40, 90, 150, 0.18),
+    0 36px 72px -10px rgba(0, 0, 0, 0.88),
+    0 56px 96px -24px rgba(0, 0, 0, 0.75);
+}
+
+/* Expanded Chirurgia — subtle cool steel neon */
+.zakres-glass--chirurgia.is-expanded {
+  border-color: rgba(160, 175, 190, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(120, 135, 150, 0.75),
+    0 0 14px 2px rgba(180, 195, 210, 0.4),
+    0 0 28px 6px rgba(100, 120, 140, 0.22),
+    inset 0 0 0 1px rgba(220, 230, 240, 0.45),
+    inset 0 0 28px 4px rgba(180, 195, 210, 0.2),
+    0 36px 72px -10px rgba(0, 0, 0, 0.88),
+    0 56px 96px -24px rgba(0, 0, 0, 0.75);
+}
+
+.glass-panel {
+  background: var(--glass-fill-light);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid rgba(142, 148, 156, 0.28);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Site header — thin liquid clear black glass (darkened, see-through) */
+.site-header-glass {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(16, 18, 22, 0.42) 0%,
+    rgba(6, 7, 10, 0.62) 100%
+  );
+  backdrop-filter: blur(16px) saturate(165%);
+  -webkit-backdrop-filter: blur(16px) saturate(165%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 2px 14px rgba(0, 0, 0, 0.22);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+/* Header CTAs stay compact — kill the global btn-gold hover lift in the bar */
+.site-header-glass .btn-gold {
+  min-height: 0;
+  line-height: 1.2;
+  box-shadow:
+    0 2px 10px rgba(196, 168, 116, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(139, 115, 85, 0.3);
+}
+
+.site-header-glass .btn-gold:hover,
+.site-header-glass .btn-gold:focus-visible {
+  transform: none;
+  box-shadow:
+    0 3px 12px rgba(196, 168, 116, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(139, 115, 85, 0.35);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .glass-card {
+    background: var(--glass-fill);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 8px 28px -6px rgba(0, 0, 0, 0.45);
+  }
+
+  :root:not([data-theme='light']) .glass-panel {
+    background: rgba(10, 9, 8, 0.72);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 -1px 0 rgba(232, 234, 237, 0.06);
+  }
+}
+
+[data-theme='dark'] .glass-card {
+  background: var(--glass-fill);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 8px 28px -6px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme='dark'] .glass-panel {
+  background: rgba(10, 9, 8, 0.72);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 -1px 0 rgba(232, 234, 237, 0.06);
+}
+
+/* ── Metal surface system + LED accents ─────────────────────────── */
+
+@keyframes metal-liquid-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes led-pulse-soft {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.metal-chrome {
+  background: var(--grad-polished-silver);
+  color: #1d1b16;
+}
+
+.metal-titanium {
+  background: var(--grad-titanium);
+  color: #e8eaed;
+}
+
+.metal-brushed-gold {
+  background: var(--grad-brushed-gold);
+  background-blend-mode: soft-light, normal;
+  color: #1d1b16;
+}
+
+.metal-liquid-chrome {
+  background-image: var(--grad-liquid-chrome);
+  background-size: 220% 220%;
+  animation: metal-liquid-shift 14s ease-in-out infinite;
+}
+
+.metal-liquid-metal {
+  background-image: var(--grad-liquid-metal);
+  background-size: 220% 220%;
+  animation: metal-liquid-shift 16s ease-in-out infinite;
+}
+
+.metal-liquid-gold {
+  background-image: var(--grad-liquid-gold);
+  background-size: 220% 220%;
+  animation: metal-liquid-shift 12s ease-in-out infinite;
+}
+
+.metal-gold-edge {
+  border: 1px solid rgba(196, 168, 116, 0.45);
+  box-shadow:
+    inset 0 0 0 1px rgba(212, 196, 168, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 18px -10px var(--led-glow-navy-soft);
+}
+
+.metal-chrome-edge {
+  border: 1px solid rgba(197, 201, 206, 0.4);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(245, 246, 247, 0.2),
+    0 0 16px -10px var(--led-glow-lavender-soft);
+}
+
+.metal-titanium-edge {
+  border: 1px solid rgba(107, 110, 115, 0.55);
+  box-shadow:
+    inset 0 0 0 1px rgba(58, 60, 64, 0.5),
+    0 0 14px -8px var(--led-glow-navy-soft);
+}
+
+.metal-divider {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(30, 58, 95, 0.55) 18%,
+    rgba(197, 201, 206, 0.55) 50%,
+    rgba(123, 107, 158, 0.4) 82%,
+    transparent 100%
+  );
+  box-shadow: 0 0 8px var(--led-glow-navy-soft);
+}
+
+/* LED hairlines / rims / ambient under-glow (points of light only) */
+.led-hairline-navy {
+  box-shadow:
+    0 1px 0 rgba(30, 58, 95, 0.65),
+    0 0 12px -2px var(--led-glow-navy);
+}
+
+.led-hairline-lavender {
+  box-shadow:
+    0 1px 0 rgba(123, 107, 158, 0.55),
+    0 0 12px -2px var(--led-glow-lavender);
+}
+
+.led-rim-navy {
+  box-shadow:
+    0 0 0 1px rgba(30, 58, 95, 0.7),
+    0 0 14px -2px var(--led-glow-navy),
+    inset 0 0 0 1px rgba(232, 234, 237, 0.08);
+}
+
+.led-rim-lavender {
+  box-shadow:
+    0 0 0 1px rgba(123, 107, 158, 0.55),
+    0 0 14px -2px var(--led-glow-lavender),
+    inset 0 0 0 1px rgba(232, 234, 237, 0.08);
+}
+
+.led-ambient-navy {
+  box-shadow: 0 12px 36px -14px var(--led-glow-navy);
+}
+
+.led-ambient-lavender {
+  box-shadow: 0 12px 36px -14px var(--led-glow-lavender);
+}
+
+.led-dot-navy {
+  background: radial-gradient(circle at 35% 30%, #3d6a9e 0%, var(--led-navy) 55%, var(--led-navy-deep) 100%);
+  box-shadow: 0 0 6px var(--led-glow-navy);
+}
+
+.led-dot-lavender {
+  background: radial-gradient(
+    circle at 35% 30%,
+    var(--led-lavender-soft) 0%,
+    var(--led-lavender) 60%,
+    #4a4060 100%
+  );
+  box-shadow: 0 0 6px var(--led-glow-lavender);
+}
+
+.led-icon-ring {
+  box-shadow:
+    0 0 0 1px rgba(196, 168, 116, 0.35),
+    0 0 12px -2px var(--led-glow-navy),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.led-pulse {
+  animation: led-pulse-soft 3.2s ease-in-out infinite;
+}
+
+/* Brushed gold CTA — grain + soft navy LED rim */
+.btn-gold {
+  background: var(--grad-brushed-gold);
+  background-blend-mode: soft-light, normal;
+  color: #1d1b16;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  box-shadow:
+    0 4px 16px rgba(196, 168, 116, 0.28),
+    0 0 18px -6px var(--led-glow-navy-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(139, 115, 85, 0.35);
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s ease,
+    background 0.2s ease;
+  will-change: transform;
+}
+
+.btn-gold:hover,
+.btn-gold:focus-visible {
+  background:
+    repeating-linear-gradient(
+      105deg,
+      #e0d2b8 0px,
+      #d0b484 1.5px,
+      #c4a874 3px,
+      #d0b484 4.5px,
+      #9a8160 6px,
+      #d0b484 7.5px
+    ),
+    linear-gradient(135deg, #e0d2b8 0%, #d0b484 48%, #9a8160 100%);
+  background-blend-mode: soft-light, normal;
+  box-shadow:
+    0 18px 36px rgba(196, 168, 116, 0.42),
+    0 8px 16px rgba(0, 0, 0, 0.18),
+    0 0 22px -4px var(--led-glow-navy),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transform: translateY(-14px);
+}
+
+.btn-navy {
+  background: linear-gradient(160deg, var(--led-navy-mid) 0%, var(--led-navy-deep) 100%);
+  color: #f1f0ed;
+  font-weight: 500;
+  border: 1px solid rgba(30, 58, 95, 0.85);
+  box-shadow:
+    0 0 14px -4px var(--led-glow-navy),
+    inset 0 1px 0 rgba(232, 234, 237, 0.1);
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s ease,
+    background 0.2s ease;
+  will-change: transform;
+}
+
+.btn-navy:hover,
+.btn-navy:focus-visible {
+  background: linear-gradient(160deg, var(--led-navy) 0%, var(--led-navy-mid) 100%);
+  box-shadow:
+    0 18px 36px rgba(0, 0, 0, 0.32),
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    0 0 18px -2px var(--led-glow-navy);
+  transform: translateY(-14px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-gold,
+  .btn-navy {
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+    will-change: auto;
+  }
+
+  .btn-gold:hover,
+  .btn-gold:focus-visible,
+  .btn-navy:hover,
+  .btn-navy:focus-visible {
+    transform: none;
+  }
+}
+
+/* Metallic text utilities */
+.text-brushed-gold {
+  background-image: linear-gradient(
+    115deg,
+    #8b7355 0%,
+    #d4c4a8 28%,
+    #c4a874 48%,
+    #f0e6d2 58%,
+    #c4a874 72%,
+    #8b7355 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.text-liquid-chrome {
+  background-image: var(--grad-liquid-chrome);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: metal-liquid-shift 14s ease-in-out infinite;
+}
+
+.text-liquid-gold {
+  background-image: var(--grad-liquid-gold);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: metal-liquid-shift 12s ease-in-out infinite;
+}
+
+/* Polished graphite metal letters — empty-cart title + home headlines */
+.text-graphite-polished {
+  background-image: linear-gradient(
+    165deg,
+    #6b6e73 0%,
+    #a8b0b8 18%,
+    #e8eaed 34%,
+    #c5c9ce 48%,
+    #3a3c40 68%,
+    #1a1b1e 84%,
+    #8e949c 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Soft polished inset: top highlight + slight depth — no glow */
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.22))
+    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.4));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metal-liquid-chrome,
+  .metal-liquid-metal,
+  .metal-liquid-gold,
+  .text-liquid-chrome,
+  .text-liquid-gold,
+  .led-pulse {
+    animation: none;
+  }
+
+  .metal-liquid-chrome,
+  .metal-liquid-metal,
+  .metal-liquid-gold,
+  .text-liquid-chrome,
+  .text-liquid-gold {
+    background-position: 40% 50%;
+  }
+}
+
+/* Category Shell Styling */
+.category-shell {
+  background: var(--cat-bg, var(--bg-primary));
+  color: var(--cat-text, var(--text-primary));
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5c9ce;
+  border-radius: 9999px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) ::-webkit-scrollbar-thumb {
+    background: #3a3c40;
+  }
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: #3a3c40;
+}
+
+/* Force-kill Next.js Dev Tools portal — even 0×0 portals steal pointer events */
+nextjs-portal,
+nextjs-portal *,
+[data-nextjs-dialog],
+[data-nextjs-dialog-overlay],
+[data-nextjs-toast],
+[data-next-badge],
+[data-next-badge-root],
+[data-nextjs-dev-tools-button],
+#__next-build-watcher,
+#__nextjs-dev-panel {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  max-width: 0 !important;
+  max-height: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  position: fixed !important;
+  inset: auto !important;
+  z-index: -9999 !important;
+}
+
+/* Custom Prose Styling */
+.prose h2 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.prose p {
+  margin-top: 0.75rem;
+  line-height: 1.75;
+  color: var(--text-muted);
+}
+
+/* ── Site Footer Brushed Metal Plate System ─────────────────────── */
+
+.site-footer-chip--jan {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(197, 201, 206, 0.02) 100%);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.site-footer-chip--jan:hover,
+.site-footer-chip--jan:focus-visible {
+  border-color: rgba(232, 234, 237, 0.65);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 0 20px -6px var(--led-glow-lavender);
+}
+
+.site-footer-metal {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.35rem;
+  border: 1px solid rgba(197, 201, 206, 0.36);
+  background: linear-gradient(160deg, #1b1d21 0%, #101215 55%, #181a1e 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 24px 54px -16px rgba(0, 0, 0, 0.85),
+    0 0 24px -8px var(--led-glow-navy-soft);
+}
+
+.site-footer-metal__plate {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.site-footer-metal__plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 13, 16, 0.62) 0%,
+    rgba(14, 16, 20, 0.72) 50%,
+    rgba(10, 11, 14, 0.82) 100%
+  );
+}
+
+.site-footer-metal__texture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.48;
+  mix-blend-mode: luminosity;
+  filter: contrast(1.12) brightness(0.88);
+}
+
+.site-footer-metal__content {
+  position: relative;
+  z-index: 1;
+}
+
+.site-footer-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .site-footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-footer-grid {
+    grid-template-columns: 1.25fr 1fr 0.9fr 1.1fr;
+    gap: 1.25rem;
+  }
+}
+
+.site-footer-cell {
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: linear-gradient(
+    160deg,
+    rgba(24, 26, 30, 0.68) 0%,
+    rgba(14, 15, 18, 0.78) 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 1.15rem 1.25rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 10px 24px -12px rgba(0, 0, 0, 0.65);
+}
+
+.site-footer-brand {
+  display: inline-block;
+  background-image: linear-gradient(
+    120deg,
+    #ffffff 0%,
+    #e8eaed 35%,
+    #c4a874 75%,
+    #f0e6d2 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.site-footer-desc {
+  color: rgba(232, 234, 237, 0.82);
+}
+
+.site-footer-link {
+  color: rgba(240, 242, 245, 0.88);
+}
+
+.site-footer-link:hover {
+  color: var(--metal-gold);
+}
+
+.site-footer-link--quiet {
+  color: rgba(197, 201, 206, 0.68);
+}
+
+.site-footer-hours {
+  color: rgba(212, 216, 222, 0.78);
+}
+
+.site-footer-legal {
+  color: rgba(197, 201, 206, 0.72);
+}
+
+.site-footer-legal__link {
+  color: rgba(212, 216, 222, 0.78);
+}
+
+.site-footer-legal__link:hover {
+  color: var(--metal-gold);
+}
+
+/* ── Empty Cart Glass & Metal Plate ─────────────────────────────── */
+
+.koszyk-empty-plate {
+  position: relative;
+  border: 1px solid rgba(197, 201, 206, 0.65);
+  background: linear-gradient(
+    145deg,
+    rgba(248, 247, 244, 0.92) 0%,
+    rgba(232, 234, 238, 0.88) 52%,
+    rgba(218, 222, 228, 0.92) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 28px 60px -18px rgba(15, 23, 42, 0.22),
+    0 12px 24px -10px rgba(15, 23, 42, 0.12);
+}
+
+[data-theme='dark'] .koszyk-empty-plate {
+  border-color: rgba(197, 201, 206, 0.25);
+  background: linear-gradient(
+    145deg,
+    rgba(28, 30, 36, 0.92) 0%,
+    rgba(18, 20, 24, 0.94) 100%
+  );
+}
+
+.koszyk-empty-plate__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.koszyk-empty-plate__texture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.38;
+}
+
+.koszyk-empty-icon-shell {
+  border: 1px solid rgba(196, 168, 116, 0.45);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(240, 236, 228, 0.76) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 12px 28px -8px rgba(139, 115, 85, 0.28);
+}
+

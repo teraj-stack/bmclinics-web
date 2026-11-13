@@ -1,0 +1,67 @@
+---
+description: CML / patient landing — follow surgeon direction without unsolicited alternatives
+alwaysApply: true
+---
+
+# CML direction from Dr Bujok
+
+When a concrete plan is given without a request for suggestions, execute it exactly. Do not offer alternative layouts, colors, or copy “improvements.”
+
+## MONOTASK (agents)
+
+- One coherent task at a time. Finish it. Do not parallelize redesigns, “while we’re here” polish, or sleep-talk alternatives.
+- When ready files / HTML / assets are handed over: **copy-paste and adapt** — do not regenerate or reinvent UI from scratch.
+- Source of truth for CML start: `refs/bmcml/BMCML-offline.html` (from Downloads `BMCML-offline (2).html`). Assets: `public/cml/start-gabinet.png`, `public/brand/logo-bujok-medical.png`.
+
+## First screen (locked visual)
+
+- Full-bleed rocky gabinet photo is the calm start of the conversation.
+- Warm **yellow** waterfall stays the light center.
+- Green tree on the left stays as the living accent.
+- Everything else stays darkened for private, intimate talk.
+- Never apply `hue-rotate` or a green cast over the whole hero photo.
+- Text sits at the **bottom** (thumb zone); the upper field stays open for the image.
+
+## Permanent brand language (from Medycyna Estetyczna prototype + logo)
+
+Source offline: `refs/medycyna-estetyczna/BM_Clinic_Medycyna_Estetyczna_offline.html` (work in ~3–4 days; do not rebuild until asked).
+
+Logo files:
+- `refs/brand/Logo_Bujok_Medical.png`
+- `refs/brand/Logo_Bujok_Medical_alt.png`
+- served copies: `public/brand/logo-bujok-medical.png` (+ alt)
+
+- Black ground with gold mark: stylized **B** + **BUJOK MEDICAL**
+- Black / near-black: `#000000` / `#1D1B16`
+- Gold accents / type: `#C4A874` family (champagne highlight → bronze shadow as in logo metal)
+- Gold-on-black composition and repeating element layout from the aesthetic prototype are the lasting system
+- Do not invent a competing palette when brand chrome is required; CML hero photo lighting rules still stand separately
+
+## Communication (patients do not read — global fact)
+
+This is not a local quirk. It applies to patients worldwide and must guide every patient-facing surface we build (CML now; other products when going global).
+
+- People on the internet navigate by **images**, as they always have. Use the same channel: pictures and frames first, letters second.
+- Prefer **more images / frames than text**. Short labels only where unavoidable.
+- Many people who “read” are secondary illiterates: they can decode/pronounce words but do **not understand** meaning. Asking them to process long copy is asking for prefrontal (kora przedczołowa) effort that is beyond most people’s capacity — not malice, a fact.
+- School baseline: only about **~20%** of primary pupils understand the text they read; the rest glue words and learn to say them aloud without comprehension. Adult web behavior follows that pattern.
+- Design consequence: meaning must land visually (photo, frame, icon, sequence). Do not rely on paragraphs. Copy-paste visual patterns from his offline apps when available.
+
+## Transparent glass panels (locked preference)
+
+Dr Bujok likes **transparent glass plates** as the working layout system — keep this approach.
+
+- Semi-transparent dark glass (radial black wash + light border + soft blur) is a strong **starting point**: content sits on plates so depth wallpaper shows through.
+- Use glass plates to **judge contrast** in place: good vs bad contrast is visible against the real background, not on a flat mock.
+- Remember this **placement language**: stacked translucent plates over atmosphere (gabinet / depth / living wall), gold accents on dark, identity + quote + side boards as plates — not opaque white cards.
+- Prefer restoring/keeping transparent glass when rebuilding sections; do not replace with milky white glass or solid opaque cards unless he asks.
+
+## Tone
+
+Polish patient-facing copy when text is needed. Respect weeks-long product decisions already made in this thread.
+
+## Proportions (hard — never break)
+
+- If something is **square**, it stays **square** (`aspect-ratio: 1 / 1`, equal width and height). Never stretch a square/portrait photo into a landscape banner.
+- Never crop a face (forehead/chin) to force a wrong aspect box — fix the **box**, not the person.
+- Reflow (e.g. text under photo) must **not** rewrite the photo’s aspect ratio.

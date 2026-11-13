@@ -1,0 +1,28 @@
+---
+description: Screen 2 panel affordances — emerald buttons above/below common plate
+alwaysApply: false
+globs: public/cml/bmcml-a.html
+---
+
+# Screen 2 — panel affordances
+
+**PL:** Cztery szmaragdowe przyciski na wspólnej płycie (`#screen2-shared-plate`) — dwa nad treścią (pas górny), dwa pod treścią (pas dolny). Klik otwiera/zamyka panele narożne (ten sam `screen2Toggle` co cytat). Boczne kropki odłożone — zastąpione tymi przyciskami.
+
+**EN:** Four emerald buttons on the common plate (`#screen2-shared-plate`) — two above the content (top band), two below (bottom band). Click toggles the corner panels (same `screen2Toggle` as the quote). Side dots deferred — replaced by these buttons.
+
+## Assets
+
+- `public/cml/btn-emerald.png` / `.webp` — horizontal green stone + gold frame, transparent background (no black plate).
+
+## Reveal pattern (locked — Flat UI successive windows)
+
+When panels appear (quote toggle or emerald buttons), use the **build pattern** from Flat UI community templates — not wallpapers/textures:
+
+- Successive layered panels: opacity + directional `translate` from each corner/side
+- Staggered entrance (TL → TR → BL → BR), flat 2D — **no** `translateZ`, canvas `scale(0.88)`, or orbit/perspective
+- Keep black glass, center photo + stone, depth wallpaper as they are
+
+## Keep
+
+- Quote marble content stays inside the shared plate; emerald buttons sit on top/bottom bands of that plate (not on quote corners, not over the face photo).
+- Panel z-index 50; emerald band z-index 4 on the shared plate.

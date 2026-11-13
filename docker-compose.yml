@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: bmclinics-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bmclinics
+      POSTGRES_PASSWORD: bmclinics
+      POSTGRES_DB: klinika
+    ports:
+      - '5432:5432'
+    volumes:
+      - bmclinics_pgdata:/var/lib/postgresql/data
+
+volumes:
+  bmclinics_pgdata:

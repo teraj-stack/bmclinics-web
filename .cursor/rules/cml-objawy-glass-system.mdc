@@ -1,0 +1,95 @@
+---
+description: Locked CML symptom (objawy) glass band — reusable accordion + head/body tile pattern
+alwaysApply: true
+globs:
+  - public/cml/**
+  - "**/*objaw*"
+  - "**/*symptom*"
+---
+
+# CML objawy glass system (locked — reusable)
+
+Dr Bujok: this symptom UI band is elegant and **permanent**. Copy it into other apps; do not reinvent marble tags, silver flares, or solid black question bars.
+
+**Source implementation:** `public/cml/bmcml-a.html` (`#objawy` + CSS for `.objaw-group` / `.objaw-q-bar` / `.objaw-group-body` / `.objaw-tag`).
+
+**Layout concept graphic:** `public/cml/objaw-kafelek-glowa.png` (+ `.webp`) — tile-with-head connector. Related refs: `objaw-pytanie-pasek.*`, `objaw-tag-glass.*` (exploration); live tags are CSS, not those bitmaps.
+
+## Related prefs (documented elsewhere — do not break)
+
+- Transparent **dark glass plates** are the working contrast system over depth / living-wall atmosphere (`cml-surgeon-direction.mdc`).
+- Gold brand accent: `#C4A874`. Black / near-black frames. Prefer see-through glass over milky white or opaque cards.
+- This symptom band is **reusable across applications**, not CML-only chrome.
+
+---
+
+## 1) Outer symptom accordion header (Ból, Krwawienie, …)
+
+Thick transparent dark glass on the **`<button>` itself** — not a thin strip.
+
+| Token | Locked value |
+|-------|----------------|
+| Padding | `28px 24px` |
+| Min-height | `~80px` |
+| Blur | `backdrop-filter: blur(10px) saturate(160%)` — strong but still see-through |
+| Fill | Light glass wash: `radial-gradient(ellipse at center, rgba(20,20,20,.018) 0%, rgba(0,0,0,.033) 100%)` |
+| Label | Large (~`26px`), serif family as in CML (`Cormorant Garamond`) |
+| Subtitle | Exact copy: **Stuknij aby rozwinąć** (~12px, muted gold/stone) |
+| Chrome | Light edge / inset hairline (`border` + `box-shadow: inset 0 0 0 1px rgba(255,255,255,.10)`); no heavy glow |
+
+Icon circle + chevron stay secondary; the **category name** is the standout.
+
+---
+
+## 1b) From `#leczenie` down — same light glass wash (global)
+
+Approved standard for glass plates / cards / CTA buttons **from `#leczenie` onward** (treatment intro, treatment cards, opinions, `#kontakt` form + buttons). Do **not** restyle `#objawy`, `#wizyta`, or screens 1–2.
+
+| Token | Locked value |
+|-------|----------------|
+| Fill | `radial-gradient(ellipse at center, rgba(20,20,20,.018) 0%, rgba(0,0,0,.033) 100%)` |
+| Blur | `backdrop-filter: blur(10px) saturate(160%)` (+ `-webkit-` twin) |
+| Edge | Light border `rgba(255,255,255,.20)` + inset hairline `inset 0 0 0 1px rgba(255,255,255,.10)` |
+
+Match **transparency / shade / border language** — not the symptom header’s ~80px height. Gold CTA borders (`#C4A874` / `rgba(196,168,116,.45)`) stay on kontakt actions.
+
+---
+
+## 2) Expanded group = tile with head
+
+Structure (required):
+
+```
+.objaw-group
+  ├── .objaw-q-bar     (head / question tab)
+  └── .objaw-group-body
+        └── .objaw-tags → .objaw-tag × N
+```
+
+### Head (`.objaw-q-bar`)
+
+- Slightly black glass — **not** a solid dominating black plate.
+- Background ≈ `rgba(0, 0, 0, 0.34)` + light blur (`blur(3px) saturate(160%)`).
+- Thin dark border; overlaps body slightly (`margin-bottom: -12px`, higher z-index).
+- Question text: thin gold `#C4A874` — quiet, not filled gold bars or white headlines.
+
+### Body (`.objaw-group-body`)
+
+- Radial vignette: **lighter center**, **darker edges** (e.g. center `rgba(0,0,0,~0.08)` → edge `~0.42`).
+- Black / near-black frame (`border: 1px solid rgba(0,0,0,0.85)`).
+- Padding leaves room under the overlapping head tab.
+
+### Tags (`.objaw-tag`) — quiet
+
+- Transparent fill, **black thin frame**, **white** label text.
+- Gold pictorial **dot** before label: `::before` `7×7px` circle `#C4A874`.
+- No marble fills, no silver glow flares, no heavy dispersion / bloom.
+- Do not stretch tags into banners; keep chip proportions.
+
+---
+
+## Hard stops
+
+- Do not replace this stack with opaque white cards, milky glass, or marble tag skins.
+- Do not make the question head a solid black slab that kills the living-wall / depth read-through.
+- When porting to another app: copy structure + glass tokens first; adapt only layout width / type scale if the host demands it — keep the head-and-body + quiet gold-dot tags.

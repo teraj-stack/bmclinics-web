@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html><head>
+<title>BM CML — Leczenie proktologiczne</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/cml/react.production.min.js"></script>
+<script src="/cml/react-dom.production.min.js"></script>
+<script src="/cml/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@keyframes spark-move-right {
+  0% { left: 50%; width: 0; height: 0; opacity: 0; }
+  10% { opacity: 1; width: 6px; height: 6px; left: calc(50% - 3px); }
+  50% { width: 30px; height: 30px; left: calc(50% - 15px); opacity: 1; box-shadow: 0 0 25px oklch(1 0.2 60), 0 0 45px oklch(0.95 0.15 55); }
+  90% { left: calc(100% - 20px); width: 60px; height: 60px; left: calc(100% - 30px); opacity: .6; box-shadow: 0 0 50px oklch(1 0.2 60), 0 0 80px oklch(0.95 0.15 55); }
+  100% { left: calc(100% - 10px); width: 0; height: 0; opacity: 0; }
+}
+@media (max-width: 600px) {
+  #top {
+    background-size: cover !important;
+    background-position: center top !important;
+  }
+  #top > div:last-child {
+    padding: 0 12px !important;
+  }
+  #top > div:last-child > div {
+    max-width: 100% !important;
+    padding: 14px 14px !important;
+  }
+}
+#screen2-stage {
+  overflow: visible !important;
+}
+#screen2-stage-canvas {
+  overflow: visible;
+  will-change: transform;
+  touch-action: pan-y;
+}
+#wizyta button:focus,
+#wizyta button:focus-visible,
+#wizyta [aria-label="BM CML"] {
+  outline: none !important;
+}
+#screen2-stage-canvas > .scp4 {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+/* Common visible plate: identity + quote stacked; light black glass so the tile reads as one */
+#screen2-shared-plate {
+  width: 100%;
+  flex: 0 1 auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+  z-index: 1;
+  padding: clamp(14px, 3.5%, 28px);
+  border-radius: 3px;
+  background: radial-gradient(ellipse at center, rgba(20, 20, 20, 0.12) 0%, rgba(0, 0, 0, 0.32) 100%);
+  backdrop-filter: blur(3px) saturate(160%);
+  -webkit-backdrop-filter: blur(3px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+#screen2-shared-plate > .s2-identity-row {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+/* Top / bottom emerald bands on the common plate (not on quote corners) */
+#screen2-shared-plate .s2-emerald-band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 100%;
+  position: relative;
+  z-index: 4;
+  gap: 12px;
+  min-height: 1.5cm;
+}
+#screen2-shared-plate .s2-emerald-band--top {
+  margin-bottom: clamp(10px, 2.2vw, 16px);
+}
+#screen2-shared-plate .s2-emerald-band--bottom {
+  margin-top: clamp(10px, 2.2vw, 16px);
+}
+#screen2-quote-board {
+  position: relative;
+  z-index: 1;
+  flex: 0 1 auto;
+  width: 100%;
+  margin-top: clamp(12px, 2.5vw, 20px);
+  align-self: stretch;
+}
+#screen2-quote-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: 0 1 auto;
+  min-height: 0;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  position: relative;
+  z-index: 1;
+  /* Crop past PNG baked gold L-bars (~5.7% H / ~10.3% V + stroke) — keep dark texture only */
+  background-size: 120% 136%;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: default;
+}
+/* Champagne L-frames: ~1mm inset; clip-path wedges (no SVG — data-URL viewBox is rewritten to sc-camel-*) */
+#screen2-quote-btn::before,
+#screen2-quote-btn::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  width: min(36%, 10rem);
+  height: min(38%, 7.75rem);
+  border: none;
+  box-sizing: border-box;
+  background: #C4A874;
+  opacity: 0.92;
+}
+/* TL: H thick at corner→hairline right; V thick at top→hairline down */
+#screen2-quote-btn::before {
+  top: 1mm;
+  left: 1mm;
+  clip-path: polygon(0 0, 100% 0, 100% 0.9%, 2.8% 2.8%, 0.75% 100%, 0 100%);
+}
+/* BR: V thick at top→hairline at corner; H thick at corner→hairline left */
+#screen2-quote-btn::after {
+  right: 1mm;
+  bottom: 1mm;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 99.1%, 99.25% 97.2%, 97.2% 0);
+}
+#screen2-quote-btn .s2q-text {
+  /* top-only margin — zero bottom so CYTAT↔top gold = attrib↔bottom gold */
+  margin: clamp(8px, 1.5vw, 12px) 0 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 5.2vw, 42px);
+  line-height: 1.32;
+  font-style: italic;
+  color: rgba(245, 240, 230, 0.92);
+  text-shadow:
+    -1px -1px 0 rgba(255, 248, 235, 0.2),
+    1px 1px 0 rgba(0, 0, 0, 0.62),
+    2px 2px 4px rgba(0, 0, 0, 0.48);
+}
+#screen2-quote-btn .s2q-gold {
+  background: linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter:
+    drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.58))
+    drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.42))
+    drop-shadow(-1px -1px 0 rgba(255, 248, 235, 0.14));
+}
+#screen2-quote-btn .s2q-attrib {
+  display: block;
+  /* Tight to quote; bottom pad alone matches CYTAT↔top gold; 0.5em clears BR vertical */
+  margin: clamp(6px, 1.2vw, 10px) 0 0;
+  padding: 0 0.5em 0 0;
+  text-align: right;
+  font-size: clamp(18px, 3.2vw, 26px);
+  line-height: 1.15;
+  font-style: normal;
+  color: rgba(240, 235, 227, 0.78);
+  text-shadow:
+    -1px -1px 0 rgba(255, 248, 235, 0.1),
+    1px 1px 0 rgba(0, 0, 0, 0.5),
+    1px 2px 2px rgba(0, 0, 0, 0.38);
+}
+/* Emerald push-buttons: ~1.5 cm wide lights above + below the quote cover */
+#screen2-shared-plate .s2-emerald-btn {
+  display: block;
+  flex: 0 0 auto;
+  width: 1.5cm; /* ~57px — pressable light / push-button */
+  min-width: 56px;
+  max-width: 60px;
+  aspect-ratio: 389 / 216;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent url("/cml/btn-emerald.webp") center / contain no-repeat;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  opacity: 0.92;
+  /* Bottle / olive green: deepen, mute teal, nudge hue toward olive */
+  filter: brightness(0.62) saturate(0.72) hue-rotate(-22deg) contrast(1.06);
+  transition: opacity 0.2s ease, transform 0.15s ease, filter 0.2s ease;
+}
+#screen2-shared-plate .s2-emerald-btn:hover,
+#screen2-shared-plate .s2-emerald-btn:focus-visible {
+  opacity: 1;
+  filter: brightness(0.68) saturate(0.75) hue-rotate(-22deg) contrast(1.06);
+  outline: none;
+}
+#screen2-shared-plate .s2-emerald-btn:active {
+  transform: translateY(1px) scale(0.96);
+  opacity: 1;
+  filter: brightness(0.58) saturate(0.7) hue-rotate(-22deg) contrast(1.06);
+}
+/* Stage card → patient app: narrow golden light-streak (no fat chip) */
+a.stage-app-streak {
+  display: block;
+  width: min(100%, 320px);
+  margin: 20px auto 0;
+  padding: 0;
+  border: none;
+  background: none;
+  line-height: 0;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+a.stage-app-streak picture,
+a.stage-app-streak img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 587 / 82;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: brightness(1);
+  transition: filter 0.18s ease, opacity 0.18s ease;
+  opacity: 0.92;
+}
+a.stage-app-streak:hover picture,
+a.stage-app-streak:hover img,
+a.stage-app-streak:focus-visible picture,
+a.stage-app-streak:focus-visible img {
+  filter: brightness(1.18);
+  opacity: 1;
+  outline: none;
+}
+a.stage-app-streak:focus-visible {
+  outline: none;
+}
+a.stage-app-streak:active picture,
+a.stage-app-streak:active img {
+  filter: brightness(1.45);
+  opacity: 1;
+}
+/* Flat UI successive windows: directional slide + fade from corners (no 3D orbit) */
+/* Stiff boards: fixed width, side-anchored — do not compress into narrow phone */
+#screen2-panel-left,
+#screen2-panel-right,
+#screen2-panel-app,
+#screen2-panel-cta {
+  position: absolute;
+  z-index: 50;
+  will-change: transform, opacity;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
+}
+/* Depth wallpapers — sequence order (paint / future switch). Static cover only; no parallax. */
+#cml-depth-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+#cml-depth-bg .cml-depth-wall {
+  position: absolute;
+  inset: 0;
+  background-image: image-set(
+    url("/cml/wizyta-living-wall.webp") type("image/webp"),
+    url("/cml/wizyta-living-wall.jpg") type("image/jpeg")
+  );
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  pointer-events: none;
+}
+#cml-depth-bg .cml-depth-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.28) 0%,
+    rgba(0, 0, 0, 0.14) 28%,
+    rgba(0, 0, 0, 0.18) 62%,
+    rgba(0, 0, 0, 0.42) 100%
+  );
+}
+/* Objawy group: head + body tile (layout from objaw-kafelek-glowa) */
+#objawy .objaw-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+/* Head tab — black plate, thin gold type, sits in body notch */
+#objawy .objaw-q-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: auto;
+  max-width: 92%;
+  min-width: min(100%, 12rem);
+  margin: 0 0 -12px;
+  padding: 10px 18px;
+  min-height: 40px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(3px) saturate(160%);
+  -webkit-backdrop-filter: blur(3px) saturate(160%);
+  border: 1px solid #1a1a1a;
+  box-shadow: none;
+}
+#objawy .objaw-q-bar > span {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: clamp(13px, 2.3vw, 16px);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: #C4A874;
+  background: none;
+  text-shadow: none;
+  filter: none;
+}
+/* Body tile — clear panel under the head */
+#objawy .objaw-group-body {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 22px 14px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.85);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.08) 0%,
+    rgba(0, 0, 0, 0.18) 55%,
+    rgba(0, 0, 0, 0.42) 100%
+  );
+  box-shadow: none;
+}
+#objawy .objaw-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* Tags — black frame + white letters; gold pictorial dot before label */
+#objawy .objaw-tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 4px;
+  border: 1px solid #000000;
+  background: transparent;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: #fff;
+  text-shadow: none;
+  box-shadow: none;
+  filter: none;
+}
+#objawy .objaw-tag::before {
+  content: "";
+  display: block;
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #C4A874;
+}
+</style>
+</helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/7a4fceec.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/77cf96aa.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/9f7441a1.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/ca3498d0.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/16972625.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/aaef0062.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/67ec494f.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/4e8096b5.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/87b0a0ec.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/f842f499.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/aaef0062.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/67ec494f.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/4e8096b5.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/87b0a0ec.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/f842f499.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/3da192b8.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/b7e6e0cc.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/55fbcc98.woff2") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/ce6063c2.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/c8fc1eb6.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/797b7120.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/cml/b32d68a8.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/3da192b8.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/b7e6e0cc.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/55fbcc98.woff2") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/ce6063c2.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/c8fc1eb6.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/797b7120.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/b32d68a8.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/4d4917f8.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/86ed9cc5.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/c086a748.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/cml/06816809.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+*{box-sizing:border-box}
+@keyframes spark-travel{
+  0%{left:0;opacity:0;transform:translateY(-50%) scale(1)}
+  8%{opacity:1}
+  82%{opacity:1;transform:translateY(-50%) scale(1)}
+  92%{left:calc(100% - 12px);opacity:1;transform:translateY(-50%) scale(2.2)}
+  100%{left:calc(100% - 12px);opacity:0;transform:translateY(-50%) scale(1)}
+}
+@keyframes spark-flicker{
+  0%,100%{filter:brightness(1)}
+  20%{filter:brightness(1.4)}
+  35%{filter:brightness(.7)}
+  50%{filter:brightness(1.6)}
+  65%{filter:brightness(.85)}
+  80%{filter:brightness(1.3)}
+}
+
+@keyframes spark-glow{
+  0%{left:0;opacity:0;transform:translateY(-50%) scale(0.5);filter:drop-shadow(0 0 4px rgba(200,160,50,.3))}
+  5%{opacity:1;transform:translateY(-50%) scale(1);filter:drop-shadow(0 0 8px rgba(255,200,80,1)) drop-shadow(0 0 16px rgba(255,200,80,.6))}
+  50%{filter:drop-shadow(0 0 12px rgba(255,200,80,.8)) drop-shadow(0 0 20px rgba(255,180,60,.4))}
+  95%{opacity:1;transform:translateY(-50%) scale(1);filter:drop-shadow(0 0 8px rgba(255,200,80,.8))}
+  100%{left:calc(100% - 6px);opacity:0;transform:translateY(-50%) scale(0.3);filter:drop-shadow(0 0 4px rgba(200,160,50,0))}
+}
+/* Reviews: slow R→L marquee + soft levitate */
+@keyframes reviews-marquee-x{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-50%,0,0)}
+}
+@keyframes reviews-levitate{
+  0%,100%{transform:translateY(0) rotate(-1.25deg)}
+  50%{transform:translateY(-19px) rotate(1.25deg)}
+}
+.reviews-marquee{
+  overflow:hidden;
+  width:100%;
+  margin-top:48px;
+  padding:22px 0 30px;
+}
+.reviews-marquee-track{
+  display:flex;
+  width:max-content;
+  animation:reviews-marquee-x 64s linear infinite;
+  will-change:transform;
+}
+.reviews-marquee-set{
+  display:flex;
+  flex-shrink:0;
+  gap:28px;
+  padding-right:28px;
+  align-items:stretch;
+}
+blockquote.scp7{
+  flex:0 0 auto;
+  width:min(360px,82vw);
+  margin:0;
+  padding:32px;
+  border-radius:24px;
+  border:2px solid rgba(255,255,255,.20);
+  background:radial-gradient(ellipse at center, rgba(20,20,20,.012) 0%, rgba(0,0,0,.022) 100%);
+  backdrop-filter:blur(10px) saturate(160%);
+  -webkit-backdrop-filter:blur(10px) saturate(160%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  cursor:pointer;
+  animation:reviews-levitate 4.1s ease-in-out infinite;
+  will-change:transform;
+}
+.reviews-marquee-set blockquote.scp7:nth-child(2){animation-duration:4.5s;animation-delay:-1.6s}
+.reviews-marquee-set blockquote.scp7:nth-child(3){animation-duration:3.7s;animation-delay:-3.2s}
+.reviews-marquee-set blockquote.scp7:nth-child(4){animation-duration:4.8s;animation-delay:-0.8s}
+@media (prefers-reduced-motion:reduce){
+  .reviews-marquee-track,
+  blockquote.scp7{animation:none !important}
+}
+/* FAQ question plate — warm moonlight when open */
+@keyframes faq-moon-ignite{
+  0%{opacity:0;transform:scale(.82);filter:brightness(1.85)}
+  30%{opacity:1;transform:scale(1.06);filter:brightness(1.55)}
+  100%{opacity:.68;transform:scale(1);filter:brightness(1)}
+}
+button.faq-q{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+button.faq-q > *{
+  position:relative;
+  z-index:1;
+}
+button.faq-q::after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  pointer-events:none;
+  top:-55%;
+  right:-18%;
+  width:62%;
+  height:210%;
+  border-radius:50%;
+  transform-origin:78% 50%;
+  background:
+    radial-gradient(ellipse at 72% 48%,
+      rgba(255,242,214,.58) 0%,
+      rgba(196,168,116,.34) 22%,
+      rgba(196,168,116,.12) 48%,
+      transparent 70%),
+    radial-gradient(ellipse at 88% 50%,
+      oklch(0.92 0.06 85 / .42) 0%,
+      oklch(0.78 0.08 78 / .16) 35%,
+      transparent 62%);
+  opacity:0;
+  box-shadow:inset -18px 0 40px -12px rgba(196,168,116,.18);
+}
+button.faq-q[aria-expanded="true"]::after{
+  animation:faq-moon-ignite 320ms ease-out forwards;
+}
+button.faq-q[aria-expanded="false"]::after,
+button.faq-q:not([aria-expanded="true"])::after{
+  opacity:0;
+  animation:none;
+}
+@media (prefers-reduced-motion:reduce){
+  button.faq-q[aria-expanded="true"]::after{
+    animation:none;
+    opacity:.55;
+    transform:none;
+    filter:none;
+  }
+}
+/* #koszty — price coverflow */
+.koszty-stage{
+  position:relative;
+  width:100%;
+  max-width:720px;
+  margin:40px auto 0;
+  height:360px;
+  perspective:1100px;
+  -webkit-perspective:1100px;
+  outline:none;
+  touch-action:pan-y;
+  user-select:none;
+  -webkit-user-select:none;
+  cursor:grab;
+}
+.koszty-stage:active{cursor:grabbing}
+.koszty-track{
+  position:relative;
+  width:100%;
+  height:100%;
+  transform-style:preserve-3d;
+  -webkit-transform-style:preserve-3d;
+}
+.koszty-plate{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(248px,68vw);
+  box-sizing:border-box;
+  padding:28px 22px 24px;
+  border-radius:2px;
+  border:1px solid rgba(255,255,255,.20);
+  background:#2A2A2A;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10), 0 18px 40px rgba(0,0,0,.45);
+  text-align:center;
+  transform-origin:center center;
+  transition:transform .42s cubic-bezier(.22,.61,.36,1), opacity .42s ease, filter .42s ease, box-shadow .42s ease;
+  will-change:transform, opacity, filter;
+  pointer-events:auto;
+}
+.koszty-plate.is-active{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12), 0 22px 48px rgba(0,0,0,.55), 0 0 0 1px rgba(196,168,116,.28);
+}
+.koszty-plate h3{
+  margin:0;
+  font-family:'Cormorant Garamond',serif;
+  font-weight:500;
+  font-size:clamp(18px,4.2vw,22px);
+  line-height:1.25;
+  color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.85);
+}
+.koszty-plate .koszty-amount{
+  margin-top:18px;
+  font-family:'Cormorant Garamond',serif;
+  font-weight:500;
+  font-size:clamp(28px,6vw,36px);
+  line-height:1;
+  color:#C4A874;
+  text-shadow:0 2px 10px rgba(0,0,0,.7);
+}
+.koszty-plate .koszty-note{
+  margin:10px auto 0;
+  max-width:22em;
+  font-size:11.5px;
+  line-height:1.4;
+  color:rgba(255,255,255,.62);
+  text-shadow:0 1px 4px rgba(0,0,0,.75);
+}
+.koszty-plate .koszty-note--extra{
+  margin-top:6px;
+  color:rgba(255,255,255,.52);
+}
+.koszty-header-blurb{
+  margin:16px 0 0;
+  max-width:38em;
+  font-size:14px;
+  line-height:1.55;
+  color:oklch(0.68 0.02 90);
+  text-shadow:0 1px 4px rgba(0,0,0,.75);
+}
+.koszty-nav{
+  position:absolute;
+  top:50%;
+  z-index:20;
+  transform:translateY(-50%);
+  width:40px;
+  height:40px;
+  border-radius:2px;
+  border:1px solid rgba(255,255,255,.20);
+  background:radial-gradient(ellipse at center, rgba(20,20,20,.018) 0%, rgba(0,0,0,.033) 100%);
+  backdrop-filter:blur(10px) saturate(160%);
+  -webkit-backdrop-filter:blur(10px) saturate(160%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  color:#C4A874;
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+}
+.koszty-nav--prev{left:0}
+.koszty-nav--next{right:0}
+.koszty-dots{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:20px;
+}
+.koszty-dot{
+  width:8px;
+  height:8px;
+  padding:0;
+  border-radius:50%;
+  border:1px solid rgba(196,168,116,.55);
+  background:transparent;
+  cursor:pointer;
+}
+.koszty-dot[aria-current="true"]{
+  background:#C4A874;
+  border-color:#C4A874;
+}
+.koszty-hint{
+  margin:14px 0 0;
+  text-align:center;
+  font-size:12px;
+  letter-spacing:.06em;
+  color:rgba(255,255,255,.45);
+}
+@media (max-width:700px){
+  .koszty-stage{height:350px;margin-top:32px}
+  .koszty-nav{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .koszty-plate{
+    transition:transform .2s ease, opacity .2s ease, filter .2s ease;
+  }
+}
+body{margin:0;overflow-x:hidden;background:oklch(0.14 0.015 240);color:oklch(0.95 0.01 90);font-family:"Inter",ui-sans-serif,system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{color:oklch(0.95 0.01 90)}
+</style>
+
+
+
+
+<!-- Design preview Desktop/Telefon chrome removed — live /cml uses real viewport via matchMedia -->
+
+<div style="{{ outerWrapStyle }}">
+<div style="{{ frameStyle }}">
+
+<header style="position:sticky;top:0;z-index:40;border-bottom:2px solid rgba(255,255,255,.18);background:linear-gradient(90deg, rgba(0,0,0,.97) 0%, rgba(0,0,0,.4) 22%, rgba(0,0,0,.4) 78%, rgba(0,0,0,.97) 100%);backdrop-filter:blur(3px) saturate(160%);-webkit-backdrop-filter:blur(3px) saturate(160%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06), inset 0 2px 0 -1px rgba(255,255,255,.35), inset 0 -14px 24px -10px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4)">
+  <div style="max-width:1120px;margin:0 auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+    <button onclick="{{ toggleMenu }}" style="display:flex;align-items:baseline;gap:8px;background:none;border:0;cursor:pointer;padding:0;font:inherit">
+      <span style="font-family:'Cormorant Garamond',serif;font-size:22px;color:oklch(0.98 0.01 85)">BM</span>
+    </button>
+    <nav style="{{ desktopNavStyle }}">
+      <a href="#about" style-hover="color:oklch(0.98 0.01 85)">O mnie</a>
+      <a href="#objawy" style-hover="color:oklch(0.98 0.01 85)">Objawy</a>
+      <a href="#wizyta" style-hover="color:oklch(0.98 0.01 85)">Wizyta</a>
+      <a href="#leczenie" style-hover="color:oklch(0.98 0.01 85)">Leczenie</a>
+      <a href="#kontakt" style-hover="color:oklch(0.98 0.01 85)">Kontakt</a>
+    </nav>
+    <a href="#kontakt" style="{{ ctaStyle }}" style-active="transform:translateY(3px) scale(.97);filter:brightness(1.3)">Kontakt</a>
+  </div>
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <nav style="display:flex;flex-direction:column;padding:8px 20px 16px;gap:2px;border-top:1px solid rgba(255,255,255,.15)">
+      <a href="#about" onclick="{{ toggleMenu }}" style="padding:12px 4px;font-size:16px;color:rgba(255,255,255,.8)">O mnie</a>
+      <a href="#objawy" onclick="{{ toggleMenu }}" style="padding:12px 4px;font-size:16px;color:rgba(255,255,255,.8)">Objawy</a>
+      <a href="#wizyta" onclick="{{ toggleMenu }}" style="padding:12px 4px;font-size:16px;color:rgba(255,255,255,.8)">Wizyta</a>
+      <a href="#leczenie" onclick="{{ toggleMenu }}" style="padding:12px 4px;font-size:16px;color:rgba(255,255,255,.8)">Leczenie</a>
+    </nav>
+  </sc-if>
+</header>
+
+<section id="top" style="min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;margin-top:-73px;padding:73px 0 32px;position:relative;background:#000 url(&quot;/cml/start-gabinet.jpg&quot;) 50% 25% / cover no-repeat">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.85) 100%)"></div>
+  <div style="position:relative;max-width:1120px;width:100%;margin:0 auto;padding:0 20px">
+    <a href="#about" style-active="transform:translateY(4px) scale(.985)" style="max-width:460px;min-height:12vh;display:flex;flex-direction:column;justify-content:center;position:relative;border-radius:1px;background:radial-gradient(ellipse at center, rgba(40,40,40,.35) 0%, rgba(0,0,0,.4) 100%);backdrop-filter:blur(3px) saturate(160%);-webkit-backdrop-filter:blur(3px) saturate(160%);border:2px solid rgba(255,255,255,.18);padding:16px 20px;cursor:pointer;transition:transform .15s ease;color:inherit;text-decoration:none">
+      <h1 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(22px,4vw,34px);line-height:1.1;letter-spacing:-.02em;margin:0;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.75), 0 1px 2px rgba(0,0,0,.9)">To normalne,<br><em>że czujesz</em> <span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 10px rgba(0,0,0,.75)) drop-shadow(0 1px 2px rgba(0,0,0,.9))">stres</span></h1>
+      <p style="margin-top:12px;max-width:420px;font-size:clamp(13px,1.4vw,15px);line-height:1.5;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.75), 0 1px 2px rgba(0,0,0,.9);white-space:pre-line">- Spokojnie, badanie proktologiczne&nbsp;
+&nbsp; &nbsp;to przede wszystkim rozmowa.&nbsp;
+- Poznaj mój wirtualny gabinet</p>
+    </a>
+  </div>
+</section>
+
+<section id="screen2-stage" style="min-height:100svh;display:flex;align-items:stretch;justify-content:center;position:relative;background:#1D1B16;border-top:1px solid rgba(196,168,116,.18);overflow:visible">
+  <span id="about" aria-hidden="true" style="position:absolute;top:0"></span>
+  <div id="screen2-stage-depth" aria-hidden="true" style="position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);height:100%;width:auto;aspect-ratio:646/866;z-index:0;background:image-set(url('/cml/screen2-depth.webp') type('image/webp'),url('/cml/screen2-depth.jpg') type('image/jpeg')) center center/auto 100% no-repeat"></div>
+  <div id="screen2-stage-depth-overlay" aria-hidden="true" style="position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(29,27,22,.55) 50%,rgba(0,0,0,.6) 100%);pointer-events:none"></div>
+  <div id="screen2-stage-canvas" style="{{ screen2CanvasStyle }}" onpointerdown="{{ screen2PanPointerDown }}" onpointermove="{{ screen2PanPointerMove }}" onpointerup="{{ screen2PanPointerUp }}" onpointercancel="{{ screen2PanPointerUp }}">
+    <div id="screen2-panel-left" aria-hidden="{{ screen2PanelAriaHidden }}" onclick="{{ screen2FocusLeft }}" style="{{ screen2PanelLeftStyle }}">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.2em;background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))">Sylwetka</div>
+      <p style="margin-top:12px;font-size:15px;line-height:1.7;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.85), 0 1px 3px rgba(0,0,0,.95);white-space:pre-line">Jestem chirurgiem i proktologiem od 16 lat.&nbsp;Od początku kariery zawodowej doświadczam, jak ważna jest właściwa komunikacja między pacjentem a lekarzem, by móc dobrze rozumieć potrzeby i oczekiwania pacjentów.
+Zależy mi na Twoim komforcie.</p>
+    </div>
+    <div id="screen2-panel-right" aria-hidden="{{ screen2PanelAriaHidden }}" onclick="{{ screen2FocusRight }}" style="{{ screen2PanelRightStyle }}">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.2em;background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))">Po co ta strona</div>
+      <p style="margin-top:12px;font-size:15px;line-height:1.7;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.85), 0 1px 3px rgba(0,0,0,.95);white-space:pre-line">Grafiki i kompozycja tej strony nie są przypadkowe. Wiem, że tematy, o których tu mowa, są poważne, intymne i trudne do przedstawienia. Dlatego stworzyłem przestrzeń, w której możesz spokojnie zapoznać się z tym, co Cię niepokoi.</p>
+    </div>
+    <div class="scp4" style="width:min(560px,100%);max-width:560px;min-width:0;height:auto;min-height:min(80svh, 720px);box-sizing:border-box;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;position:relative;z-index:1;overflow:visible;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border:none;padding:0;transition:all 0.3s ease;flex-shrink:0">
+      <div id="screen2-shared-plate">
+        <div class="s2-emerald-band s2-emerald-band--top">
+          <button type="button" class="s2-emerald-btn" onclick="{{ screen2Toggle }}" aria-expanded="{{ screen2Expanded }}" aria-controls="screen2-panel-left screen2-panel-right screen2-panel-app screen2-panel-cta" aria-label="Pokaż więcej o lekarzu"></button>
+          <button type="button" class="s2-emerald-btn" onclick="{{ screen2Toggle }}" aria-expanded="{{ screen2Expanded }}" aria-controls="screen2-panel-left screen2-panel-right screen2-panel-app screen2-panel-cta" aria-label="Pokaż więcej o lekarzu"></button>
+        </div>
+        <div class="s2-identity-row" style="display:flex;align-items:center;background:radial-gradient(ellipse at center, rgba(20,20,20,.1) 0%, rgba(0,0,0,.5) 100%);backdrop-filter:blur(3px) saturate(160%);-webkit-backdrop-filter:blur(3px) saturate(160%);border:2px solid rgba(255,255,255,.22);border-radius:0;overflow:hidden">
+          <div style="width:clamp(120px,32%,180px);aspect-ratio:1 / 1;flex-shrink:0;background:oklch(0.19 0.02 240) url(&quot;/cml/cta-stone.jpg&quot;) center 20%/cover no-repeat;border-radius:0"></div>
+          <div style="display:flex;align-items:center;align-self:stretch;flex:1;min-width:0;font-size:clamp(11px,2.2vw,14px);text-transform:uppercase;letter-spacing:.18em;line-height:1.45;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.6);padding:8px clamp(12px,3%,18px);overflow-wrap:anywhere">Jan Bujok — chirurg, specjalista chirurgii ogólnej, flebolog, proktolog</div>
+        </div>
+        <div id="screen2-quote-board">
+          <div id="screen2-quote-btn" style="{{ screen2QuoteStyle }}">
+            <div style="{{ screen2QuoteLabelStyle }}">Cytat</div>
+            <p class="s2q-text">Badanie proktologiczne<br>Nie powinno wymagać<br>od pacjenta <span class="s2q-gold">odwagi</span><br>tylko <span class="s2q-gold">uwagi</span> lekarza"<span class="s2q-attrib">-<span class="s2q-gold" style="font-weight:500">Jan Bujok</span></span></p>
+          </div>
+        </div>
+        <div class="s2-emerald-band s2-emerald-band--bottom">
+          <button type="button" class="s2-emerald-btn" onclick="{{ screen2Toggle }}" aria-expanded="{{ screen2Expanded }}" aria-controls="screen2-panel-left screen2-panel-right screen2-panel-app screen2-panel-cta" aria-label="Pokaż więcej o lekarzu"></button>
+          <button type="button" class="s2-emerald-btn" onclick="{{ screen2Toggle }}" aria-expanded="{{ screen2Expanded }}" aria-controls="screen2-panel-left screen2-panel-right screen2-panel-app screen2-panel-cta" aria-label="Pokaż więcej o lekarzu"></button>
+        </div>
+      </div>
+    </div>
+    <div id="screen2-panel-app" aria-hidden="{{ screen2PanelAriaHidden }}" onclick="{{ screen2FocusApp }}" style="{{ screen2PanelAppStyle }}">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.2em;background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))">Aplikacja</div>
+      <p style="margin-top:8px;font-size:15px;line-height:1.7;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.85), 0 1px 3px rgba(0,0,0,.95)">Poprowadzę Cię krok po kroku przez to, czego możesz się spodziewać podczas pierwszej wizyty u proktologa. Poznaj objawy i dowiedz się, po co przychodzisz do proktologa.</p>
+    </div>
+    <div id="screen2-panel-cta" aria-hidden="{{ screen2PanelAriaHidden }}" onclick="{{ screen2FocusCta }}" style="{{ screen2PanelCtaStyle }}">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;line-height:1.3">Obawiasz się badania proktologicznego?</div>
+      <div style="margin-top:12px;height:1px;width:100%;background:linear-gradient(90deg, oklch(0.78 0.13 85) 0%, transparent 60%)"></div>
+      <div style="margin-top:12px;font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.8), 0 1px 2px rgba(0,0,0,.9);text-align:right">Sprawdź aplikację, którą stworzyłem dla Ciebie</div>
+      <div style="margin-top:12px;display:flex;gap:8px;position:relative;align-items:center">
+        <a href="{{ appHref }}" style="display:flex;align-items:center;gap:10px;padding:6px 2px;text-decoration:none;flex:1" style-hover="gap:16px">
+          <span style="flex:1;height:2px;background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.8) 30%, rgba(255,255,255,1) 50%, rgba(255,255,255,.8) 70%, rgba(255,255,255,0) 100%);position:relative;overflow:hidden;animation:line-glow 4s ease-in-out infinite">
+            <span style="position:absolute;inset:0;background:radial-gradient(circle 80px at center, rgba(255,255,255,.9), transparent);box-shadow:0 0 40px 20px rgba(255,255,255,.6), 0 0 80px 40px rgba(255,255,255,.3);animation:spark-slide 4s ease-in-out infinite"></span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="cml-depth-block" style="position:relative;overflow:hidden;background:#000">
+<div id="cml-depth-bg" aria-hidden="true">
+  <div class="cml-depth-wall" aria-hidden="true"></div>
+  <div class="cml-depth-overlay" aria-hidden="true"></div>
+</div>
+<div id="cml-depth-content" style="position:relative;z-index:1">
+<section id="wizyta" style="padding:clamp(40px,6vw,80px) 0;border-top:1px solid rgba(196,168,116,.12)">
+  <div style="max-width:1120px;margin:0 auto;padding:0 20px">
+    <div style="max-width:640px">
+      <div style="display:inline-block;padding:24px 32px;background:radial-gradient(ellipse at center, rgba(20,20,20,.18) 0%, rgba(0,0,0,.42) 100%);backdrop-filter:blur(3px) saturate(160%);-webkit-backdrop-filter:blur(3px) saturate(160%);border:2px solid rgba(255,255,255,.20);border-radius:2px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <span style="font-size:11px;text-transform:uppercase;letter-spacing:.22em;white-space:nowrap;background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))">Co dzieje się dalej</span>
+        </div>
+        <div style="height:1px;width:50%;background:linear-gradient(90deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, transparent 100%);margin-bottom:20px"></div>
+        <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,4vw,48px);line-height:1.1;color:oklch(0.98 0.01 90);text-shadow:0 4px 16px rgba(0,0,0,.8), 0 2px 8px rgba(0,0,0,.6)">Cztery etapy każdej wizyty</h2>
+        <p style="margin:16px 0 0;color:rgba(255,255,255,.7);line-height:1.7;text-shadow:0 2px 6px rgba(0,0,0,.8)">Rozmowa jest najważniejsza, to jedyny sposób na zrozumienie oczekiwań pacjenta. Bez niej najlepsza technologia jest bezużyteczna</p>
+      </div>
+    </div>
+    <div style="position:relative;z-index:1;margin-top:56px;display:flex;flex-direction:column;gap:16px;max-width:440px">
+      <sc-for list="{{ stageItems }}" as="st" hint-placeholder-count="4">
+        <div style="{{ st.wrapStyle }}">
+          <button onclick="{{ st.toggle }}" style="display:flex;width:100%;align-items:center;gap:16px;padding:14px 72px 14px 20px;background:radial-gradient(ellipse at center, rgba(20,20,20,.1) 0%, rgba(0,0,0,.5) 100%);backdrop-filter:blur(3px) saturate(160%);-webkit-backdrop-filter:blur(3px) saturate(160%);border:2px solid rgba(255,255,255,.22);border-radius:2px;cursor:pointer;font:inherit;color:inherit;position:relative;overflow:hidden;transition:transform .15s ease;outline:none" style-active="transform:translateY(3px) scale(.99)">
+            <span style="flex-shrink:0;font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))">{{ st.n }}</span>
+            <span style="flex:1;text-align:left;font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))">{{ st.h }}</span>
+            <span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6));transition:transform .2s;font-size:20px;display:inline-block">▾</span>
+            <div onclick="{{ st.logoClick }}" style="{{ st.logoStyle }}" aria-label="BM CML"></div>
+          </button>
+          <sc-if value="{{ st.open }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:24px 20px;background:rgba(0,0,0,.28);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-radius:0 0 2px 2px;border:1px solid rgba(255,255,255,.12);border-top:none;font-size:15px;line-height:1.7;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.85), 0 1px 3px rgba(0,0,0,.95);white-space:pre-line">
+              {{ st.p }}
+              <sc-if value="{{ st.showApp }}" hint-placeholder-val="{{ false }}">
+                <a class="stage-app-streak" href="{{ appHref }}" aria-label="Aplikacja dla pacjentów">
+                  <picture>
+                    <source srcset="/cml/przycisk-pasek.webp" type="image/webp">
+                    <img src="/cml/przycisk-pasek.png" alt="" width="587" height="82" decoding="async">
+                  </picture>
+                </a>
+              </sc-if>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="objawy" style="padding:clamp(56px,9vw,112px) 0;border-top:1px solid rgba(255,255,255,.12)">
+  <div style="max-width:1120px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;gap:48px">
+    <div style="flex:1 1 300px">
+      <div style="display:inline-block;padding:24px 32px;background:radial-gradient(ellipse at center, rgba(20,20,20,.18) 0%, rgba(0,0,0,.42) 100%);backdrop-filter:blur(3px) saturate(160%);-webkit-backdrop-filter:blur(3px) saturate(160%);border:2px solid rgba(255,255,255,.20);border-radius:2px">
+        <div style="display:flex;align-items:center;gap:12px;font-size:11px;text-transform:uppercase;letter-spacing:.22em"><span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent">◆</span><span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent">Rozpoznaj objaw</span></div>
+        <h2 style="margin-top:24px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,4vw,48px);line-height:1.1;color:oklch(0.98 0.01 90);text-shadow:0 4px 16px rgba(0,0,0,.8), 0 2px 8px rgba(0,0,0,.6)">Jak opisać, co czujesz</h2>
+        <p style="margin:16px 0 0;font-size:14px;font-style:italic;line-height:1.55;color:oklch(0.68 0.02 90)">Warto przemyśleć te kwestie przed wizytą. Ułatwia to komunikację i pozwala skupić się na diagnostyce.</p>
+      </div>
+    </div>
+    <div style="flex:2 1 420px">
+      <sc-for list="{{ symptomItems }}" as="s" hint-placeholder-count="5">
+        <div style="overflow:hidden;border-radius:2px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);margin-bottom:12px">
+          <button onclick="{{ s.toggle }}" style="display:flex;width:100%;align-items:center;gap:16px;padding:28px 24px;min-height:80px;box-sizing:border-box;text-align:left;background:radial-gradient(ellipse at center, rgba(20,20,20,.018) 0%, rgba(0,0,0,.033) 100%);backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);border:0;border-bottom:1px solid rgba(255,255,255,.20);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);cursor:pointer;font:inherit;color:inherit">
+            <span style="width:44px;height:44px;border-radius:999px;background:linear-gradient(135deg, rgba(255,255,255,.1), rgba(0,0,0,.3));border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;font-size:18px;flex-shrink:0">{{ s.icon }}</span>
+            <span style="flex:1">
+              <span style="display:block;font-family:'Cormorant Garamond',serif;font-size:26px">{{ s.label }}</span>
+              <span style="display:block;font-size:12px;color:oklch(0.68 0.02 90);margin-top:2px">Stuknij aby rozwinąć</span>
+            </span>
+            <span style="color:oklch(0.68 0.02 90);transition:transform .2s">▾</span>
+          </button>
+          <sc-if value="{{ s.open }}" hint-placeholder-val="{{ false }}">
+            <div style="border-top:1px solid rgba(255,255,255,.12);padding:20px;display:flex;flex-direction:column;gap:20px">
+              <sc-for list="{{ s.groups }}" as="g" hint-placeholder-count="1">
+                <div class="objaw-group">
+                  <div class="objaw-q-bar" role="heading" aria-level="3">
+                    <span>{{ g.q }}</span>
+                  </div>
+                  <div class="objaw-group-body">
+                    <div class="objaw-tags">
+                      <sc-for list="{{ g.tags }}" as="tag" hint-placeholder-count="4">
+                        <span class="objaw-tag">{{ tag }}</span>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="leczenie" style="padding:clamp(40px,6vw,80px) 0;border-top:1px solid rgba(255,255,255,.12)">
+  <div style="max-width:1120px;margin:0 auto;padding:0 20px">
+    <div style="width:fit-content;max-width:100%">
+      <div style="display:inline-block;width:min(100%,480px);max-width:100%;box-sizing:border-box;padding:0;background:rgba(0,0,0,0.03);backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid rgba(255,255,255,.28);border-radius:2px;box-shadow:none">
+        <div style="width:100%;box-sizing:border-box;padding:28px 24px;min-height:80px;background:rgba(0,0,0,0.15);backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid rgba(255,255,255,.20);border-radius:2px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)">
+          <button onclick="{{ toggleLeczenieIntro }}" style="display:flex;width:100%;align-items:flex-start;gap:20px;padding:0;text-align:left;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border:0;cursor:pointer;font:inherit;color:inherit">
+            <span style="flex:1 1 auto;min-width:0">
+              <span style="display:flex;align-items:center;gap:12px;font-size:11px;text-transform:uppercase;letter-spacing:.22em"><span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))">Możliwości leczenia</span></span>
+              <span style="display:block;margin-top:10px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,4vw,48px);line-height:1.1;color:oklch(0.98 0.01 90);text-shadow:0 4px 16px rgba(0,0,0,.8), 0 2px 8px rgba(0,0,0,.6)">Zaawansowane leczenie laserowe</span>
+              <span style="display:block;height:1px;width:50%;background:linear-gradient(90deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, transparent 100%);margin-top:16px;margin-bottom:8px"></span>
+            </span>
+            <span style="{{ leczenieIntroChevStyle }}">▾</span>
+          </button>
+        </div>
+        <sc-if value="{{ leczenieIntroOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="width:100%;box-sizing:border-box;padding:8px 24px 28px">
+            <ul style="margin:0;padding:0;list-style:none;color:rgba(255,255,255,.85);line-height:1.7;text-shadow:0 2px 6px rgba(0,0,0,.8)">
+              <li style="display:flex;gap:10px;align-items:flex-start"><span style="color:#C4A874;flex-shrink:0;line-height:1.7" aria-hidden="true">→</span><span>Łączę technologię z indywidualnym podejściem</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start;margin-top:2px"><span style="color:#C4A874;flex-shrink:0;line-height:1.7" aria-hidden="true">→</span><span>Nie widziałem dwóch takich samych przypadków</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start;margin-top:2px"><span style="color:#C4A874;flex-shrink:0;line-height:1.7" aria-hidden="true">→</span><span>Zabiegi wykonywane są w znieczuleniu miejscowym lub z dodatkowym krótkim znieczuleniem dożylnym</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start;margin-top:2px"><span style="color:#C4A874;flex-shrink:0;line-height:1.7" aria-hidden="true">→</span><span>Zabiegi laserowe trwają od 20 do 40 minut</span></li>
+            </ul>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+    <div style="margin-top:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;max-width:800px">
+      <sc-for list="{{ treatments }}" as="t" hint-placeholder-count="5">
+        <div style="border-radius:2px;border:1px solid rgba(255,255,255,.28);padding:0;transition:transform .15s ease;background:rgba(0,0,0,0.03);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;box-sizing:border-box" style-hover="transform:translateY(-4px)" style-active="transform:translateY(2px) scale(.98)">
+          <button onclick="{{ t.toggle }}" style="display:block;width:100%;box-sizing:border-box;padding:18px 20px;text-align:left;cursor:pointer;font:inherit;color:inherit;background:rgba(0,0,0,0.25);backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid rgba(255,255,255,.20);border-radius:2px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)">
+            <span style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+              <h3 style="font-family:'Cormorant Garamond',serif;font-size:18px;margin:0;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.75)">{{ t.h }}</h3>
+              <span style="{{ t.chevStyle }}">▾</span>
+            </span>
+          </button>
+          <sc-if value="{{ t.open }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0;padding:16px 20px 20px;font-size:14px;line-height:1.7;color:rgba(255,255,255,.82);text-shadow:0 1px 4px rgba(0,0,0,.7);white-space:pre-line">{{ t.p }}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(40px,6vw,80px) 0;border-top:1px solid rgba(255,255,255,.12);position:relative">
+  <div style="max-width:1120px;margin:0 auto;padding:0 20px">
+    <div style="display:inline-block;padding:24px 32px;background:radial-gradient(ellipse at center, rgba(20,20,20,.18) 0%, rgba(0,0,0,.42) 100%);backdrop-filter:blur(3px) saturate(160%);-webkit-backdrop-filter:blur(3px) saturate(160%);border:2px solid rgba(255,255,255,.20);border-radius:2px;box-sizing:border-box;max-width:100%">
+      <div style="display:flex;align-items:center;gap:12px;font-size:11px;text-transform:uppercase;letter-spacing:.22em"><span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent">Opinie pacjentów</span></div>
+      <h2 style="margin:10px 0 0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,4vw,48px);line-height:1.1">Co mówią moi pacjenci</h2>
+      <div style="height:1px;width:50%;background:linear-gradient(90deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, transparent 100%);margin-top:16px;margin-bottom:8px"></div>
+      <div style="font-size:14px;color:oklch(0.68 0.02 90)"><span style="font-family:'Cormorant Garamond',serif;font-size:22px;color:oklch(0.95 0.01 90)">5.0</span>/5 · 312 opinii · ZnanyLekarz.pl</div>
+    </div>
+  </div>
+  <div class="reviews-marquee" aria-label="Opinie pacjentów">
+    <div class="reviews-marquee-track">
+      <div class="reviews-marquee-set">
+        <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="4">
+          <blockquote class="scp7">
+            <p style="font-family:'Cormorant Garamond',serif;font-size:20px;line-height:1.5;color:rgba(255,255,255,.92);margin:0">{{ r.t }}</p>
+            <footer style="margin-top:24px;font-size:14px;display:flex;align-items:center;gap:12px">
+              <svg width="32" height="32" sc-camel-view-box="0 0 24 24" style="flex-shrink:0;color:oklch(0.68 0.02 90)"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              <div>
+                <div style="font-weight:500">{{ r.a }}</div>
+                <div style="color:oklch(0.68 0.02 90)">{{ r.m }}</div>
+              </div>
+            </footer>
+          </blockquote>
+        </sc-for>
+      </div>
+      <div class="reviews-marquee-set" aria-hidden="true">
+        <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="4">
+          <blockquote class="scp7">
+            <p style="font-family:'Cormorant Garamond',serif;font-size:20px;line-height:1.5;color:rgba(255,255,255,.92);margin:0">{{ r.t }}</p>
+            <footer style="margin-top:24px;font-size:14px;display:flex;align-items:center;gap:12px">
+              <svg width="32" height="32" sc-camel-view-box="0 0 24 24" style="flex-shrink:0;color:oklch(0.68 0.02 90)"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              <div>
+                <div style="font-weight:500">{{ r.a }}</div>
+                <div style="color:oklch(0.68 0.02 90)">{{ r.m }}</div>
+              </div>
+            </footer>
+          </blockquote>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(56px,9vw,112px) 0;border-top:1px solid rgba(255,255,255,.12)">
+  <div style="max-width:1120px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;gap:48px">
+    <div style="flex:1 1 240px">
+      <div style="display:inline-block;padding:24px 32px;background:rgba(0,0,0,0.25);backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid rgba(255,255,255,.20);border-radius:2px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)">
+        <div style="display:flex;align-items:center;gap:12px;font-size:11px;text-transform:uppercase;letter-spacing:.22em"><span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent">◆</span><span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent">Najczęstsze pytania</span></div>
+        <h2 style="margin-top:24px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,4vw,48px);line-height:1.1;color:oklch(0.98 0.01 90);text-shadow:0 4px 16px rgba(0,0,0,.8), 0 2px 8px rgba(0,0,0,.6)">FAQ</h2>
+      </div>
+    </div>
+    <div style="flex:2 1 480px;border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12)">
+      <sc-for list="{{ faqItems }}" as="f" hint-placeholder-count="5">
+        <div style="border-bottom:1px solid rgba(255,255,255,.12)">
+          <button type="button" class="faq-q" onclick="{{ f.toggle }}" aria-expanded="{{ f.open }}" style="display:flex;width:100%;align-items:center;gap:16px;padding:20px 24px;text-align:left;background:rgba(0,0,0,0.52);border:0;cursor:pointer;font:inherit;color:inherit">
+            <span style="flex:1;font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2vw,24px)">{{ f.q }}</span>
+            <span style="color:oklch(0.68 0.02 90);transition:transform .2s">▾</span>
+          </button>
+          <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:20px 24px;background:rgba(0,0,0,0.40);font-size:15px;line-height:1.7;color:oklch(0.68 0.02 90);white-space:pre-line">{{ f.a }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="koszty" style="padding:clamp(56px,9vw,112px) 0;border-top:1px solid rgba(255,255,255,.12)">
+  <div style="max-width:1120px;margin:0 auto;padding:0 20px">
+    <div style="display:inline-block;padding:24px 32px;background:rgba(0,0,0,0.25);backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid rgba(255,255,255,.20);border-radius:2px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);box-sizing:border-box;max-width:100%">
+      <div style="display:flex;align-items:center;gap:12px;font-size:11px;text-transform:uppercase;letter-spacing:.22em"><span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent">Cennik</span></div>
+      <h2 style="margin-top:16px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(28px,4.4vw,48px);line-height:1.15;color:oklch(0.98 0.01 90);text-shadow:0 4px 16px rgba(0,0,0,.8), 0 2px 8px rgba(0,0,0,.6)">A ile to będzie kosztować?</h2>
+      <p class="koszty-header-blurb">Cena to całkowity koszt leczenia choroby, z którą pacjent przychodzi. Wszystkie zabiegi potrzebne w trakcie leczenia mieszczą się w tej kwocie — ta zasada dotyczy wszystkich zabiegów w mojej klinice.</p>
+    </div>
+    <div class="koszty-stage" role="region" aria-roledescription="karuzela" aria-label="Cennik zabiegów — przesuń w lewo lub w prawo" tabindex="0" onkeydown="{{ priceKeyDown }}" onpointerdown="{{ pricePointerDown }}" onpointermove="{{ pricePointerMove }}" onpointerup="{{ pricePointerUp }}" onpointercancel="{{ pricePointerUp }}">
+      <button type="button" class="koszty-nav koszty-nav--prev" aria-label="Poprzednia usługa" onclick="{{ pricePrev }}">‹</button>
+      <div class="koszty-track" aria-live="polite">
+        <sc-for list="{{ pricePlates }}" as="p" hint-placeholder-count="5">
+          <article class="koszty-plate" style="{{ p.style }}" aria-hidden="{{ p.ariaHidden }}" aria-label="{{ p.ariaLabel }}" onclick="{{ p.select }}">
+            <h3>{{ p.title }}</h3>
+            <div class="koszty-amount">{{ p.price }}</div>
+            <p class="koszty-note">{{ p.note }}</p>
+            <sc-if value="{{ p.hasNoteExtra }}" hint-placeholder-val="{{ false }}">
+              <p class="koszty-note koszty-note--extra">{{ p.noteExtra }}</p>
+            </sc-if>
+          </article>
+        </sc-for>
+      </div>
+      <button type="button" class="koszty-nav koszty-nav--next" aria-label="Następna usługa" onclick="{{ priceNext }}">›</button>
+    </div>
+    <div class="koszty-dots" role="tablist" aria-label="Wybór usługi">
+      <sc-for list="{{ pricePlates }}" as="p" hint-placeholder-count="5">
+        <button type="button" class="koszty-dot" role="tab" aria-label="{{ p.dotLabel }}" aria-current="{{ p.ariaCurrent }}" onclick="{{ p.select }}"></button>
+      </sc-for>
+    </div>
+    <p class="koszty-hint">Przesuń w lewo lub w prawo</p>
+  </div>
+</section>
+
+<section id="kontakt" style="padding:clamp(56px,9vw,112px) 0;border-top:1px solid rgba(255,255,255,.12)">
+  <div style="max-width:1120px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;gap:48px">
+    <div style="flex:1 1 400px">
+      <div style="display:inline-block;padding:24px 32px;background:rgba(0,0,0,0.25);backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid rgba(255,255,255,.20);border-radius:2px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);box-sizing:border-box;max-width:100%">
+        <div style="display:flex;align-items:center;gap:12px;font-size:11px;text-transform:uppercase;letter-spacing:.22em"><span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent">◆</span><span style="background:linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%);-webkit-background-clip:text;background-clip:text;color:transparent">Następny krok</span></div>
+        <h2 style="margin-top:24px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(40px,6vw,60px);line-height:1.1;color:oklch(0.98 0.01 90);text-shadow:0 4px 16px rgba(0,0,0,.8), 0 2px 8px rgba(0,0,0,.6)">Porozmawiajmy</h2>
+        <p style="margin-top:20px;color:rgba(255,255,255,.7);line-height:1.7;max-width:420px">Pierwsza wizyta to czas na spokojną rozmowę. Wystarczy, że przyjdziesz.<svg width="1.15em" height="1.15em" sc-camel-view-box="0 0 24 24" aria-hidden="true" style="display:inline-block;vertical-align:-0.18em;margin-left:0.35em;color:#C4A874"><rect x="11" y="11" width="11" height="2.6" rx="1.2" fill="currentColor"></rect><rect x="2" y="10" width="10" height="4.6" rx="1.6" fill="currentColor"></rect><path d="M4.2 10V5.8M6.8 10V5.2M9.4 10V5.8" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"></path></svg></p>
+        <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px">
+          <a href="tel:+48510432361" style="{{ ctaCallStyle }}" style-active="transform:translateY(3px) scale(.97);filter:brightness(1.3)">Zadzwoń: +48 510 432 361</a>
+          <a href="#form" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 24px;font-size:16px;font-weight:500;background:radial-gradient(ellipse at center, rgba(20,20,20,.018) 0%, rgba(0,0,0,.033) 100%);backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);border:2px solid rgba(196,168,116,.45);border-radius:2px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);color:#fff;text-decoration:none;text-shadow:0 2px 6px rgba(0,0,0,.8)">Napisz wiadomość</a>
+        </div>
+      </div>
+    </div>
+    <form id="form" onsubmit="{{ onSubmit }}" style="flex:1 1 340px;border-radius:2px;border:2px solid rgba(255,255,255,.20);background:radial-gradient(ellipse at center, rgba(20,20,20,.018) 0%, rgba(0,0,0,.033) 100%);backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);padding:32px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.85)">Wyślij zapytanie</div>
+      <div style="margin-top:8px;font-size:14px;color:rgba(255,255,255,.7);text-shadow:0 2px 6px rgba(0,0,0,.8)">Odpowiem tak szybko, jak to możliwe.</div>
+      <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px">
+        <input required="{{ true }}" placeholder="Imię" style="width:100%;border-radius:2px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.28);padding:12px 16px;font-size:14px;color:#fff;font-family:inherit">
+        <input required="{{ true }}" type="email" placeholder="E-mail" style="width:100%;border-radius:2px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.28);padding:12px 16px;font-size:14px;color:#fff;font-family:inherit">
+        <input placeholder="Telefon (opcjonalnie)" style="width:100%;border-radius:2px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.28);padding:12px 16px;font-size:14px;color:#fff;font-family:inherit">
+        <textarea required="{{ true }}" rows="4" placeholder="W czym mogę pomóc?" style="width:100%;border-radius:2px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.28);padding:12px 16px;font-size:14px;color:#fff;font-family:inherit;resize:vertical;min-height:110px"></textarea>
+        <button type="submit" style="width:100%;border-radius:2px;background:radial-gradient(ellipse at center, rgba(20,20,20,.018) 0%, rgba(0,0,0,.033) 100%);backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);border:2px solid rgba(196,168,116,.45);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.8);padding:12px;font-size:14px;font-weight:500;cursor:pointer">Wyślij wiadomość</button>
+      </div>
+    </form>
+  </div>
+</section>
+</div>
+</div>
+
+<footer style="border-top:1px solid rgba(255,255,255,.12);background:oklch(0.14 0.015 240)">
+  <div style="max-width:1120px;margin:0 auto;padding:64px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px">
+    <div>
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Cormorant Garamond',serif;font-size:22px">Bujok Medical</span></div>
+      <p style="margin-top:16px;font-size:14px;color:oklch(0.68 0.02 90)">Dr Jan Bujok</p>
+      <a href="tel:+48510432361" style="display:block;margin-top:4px;font-size:14px;color:oklch(0.68 0.02 90)" style-hover="color:oklch(0.95 0.01 90)">+48 510 432 361</a>
+      <a href="mailto:kontakt@bujokmedical.pl" style="display:block;margin-top:4px;font-size:14px;color:oklch(0.68 0.02 90)" style-hover="color:oklch(0.95 0.01 90)">kontakt@bujokmedical.pl</a>
+    </div>
+    <div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:oklch(0.68 0.02 90)">Kontakt</div>
+      <address style="font-style:normal;line-height:1.7;font-size:14px;color:rgba(255,255,255,.82);margin-top:16px">ul. Branickiego 10/U6<br>Warszawa Wilanów</address>
+    </div>
+    <div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:oklch(0.68 0.02 90)">Godziny przyjęć</div>
+      <div style="margin-top:16px;font-size:14px;color:rgba(255,255,255,.82);display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;gap:24px"><span>Poniedziałek — Piątek</span><span>8:00 — 18:00</span></div>
+        <div style="display:flex;justify-content:space-between;gap:24px"><span>Sobota</span><span>Zamknięte</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,.12);padding:24px 0;font-size:12px;color:oklch(0.68 0.02 90)"><div style="max-width:1120px;margin:0 auto;padding:0 20px">© 2026 Bujok Medical. Dr Jan Bujok. Wszelkie prawa zastrzeżone.</div></div>
+</footer>
+
+</div>
+</div>
+<div style="box-sizing: border-box; display: flex; flex-direction: column; width: 120px; height: 120px; background-color: #b6b0a7; border-radius: 8px; position: absolute; left: -594px; top: 7168px;"></div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script="">
+const SYMPTOMS = [
+  {icon:"⚡",label:"Ból",groups:[
+    {q:"Jak odczuwalny jest ten ból?",tags:["Gniotący / ściskający","Skurczowy","Piekący","Kłujący","Dyskomfort w miednicy"]},
+    {q:"Kiedy się pojawia?",tags:["Przy wypróżnianiu","Po wypróżnianiu","Stale","Przy siedzeniu"]}]},
+  {icon:"🩸",label:"Krwawienie",groups:[
+    {q:"Jaki kolor i gdzie się pojawia?",tags:["Jasnoczerwona","Ciemnoczerwona","Na papierze","W muszli","Na stolcu","Wymieszana ze stolcem"]}]},
+  {icon:"🔥",label:"Pieczenie",groups:[
+    {q:"Kiedy najsilniejsze?",tags:["Po wypróżnieniu","Całodzienne","Wieczorem","Po ostrych potrawach"]}]},
+  {icon:"◉",label:"Guzek",groups:[
+    {q:"Co wyczuwasz?",tags:["Miękki guzek","Twarde zgrubienie","Wypadająca zmiana","Bolesny obrzęk"]},
+    {q:"Od kiedy?",tags:["Od kilku dni","Od tygodni","Nawraca"]}]},
+  {icon:"◍",label:"Wyciek / wilgotność",groups:[
+    {q:"Jaki charakter?",tags:["Śluz","Ropna wydzielina","Ślady stolca","Stała wilgotność"]}]}
+];
+const VISIT_FLOW = [
+  {n:"01",h:"Objaw",p:"Opisujesz co czujesz. Dopytuję krótkimi pytaniami."},
+  {n:"02",h:"Diagnoza",p:"Krótkie badanie w pozycji bocznej. Stop przy bólu."},
+  {n:"03",h:"Kwalifikacja",p:"Weryfikuję rozpoznanie. 90% jest nieprawidłowych."},
+  {n:"04",h:"Plan",p:"Omawiam możliwe rozwiązania problemu\nWspólnie z pacjentem podejmujemy decyzję"}
+];
+const STAGES = [
+  {n:1,h:"Rozmowa",p:"Rozmowa zajmuje 80% czasu wizyty.\n\n• Dopytuję o szczegóły objawów\n• Pytam, jak rozumiesz to, co czujesz — każdy inaczej opisuje ból, dyskomfort czy świąd\n• Ta faza jest podstawą do postawienia rozpoznania\n\nPytam o objawy: ból, krwawienie, pieczenie, guzek, krew na stolcu — i jak to wpływa na Twoją codzienność.",showApp:true},
+  {n:2,h:"Badanie",p:"Krótkie badanie w pozycji bocznej. Dzięki dobrej rozmowie wiem już, na co zwrócić uwagę. Badanie nie jest nieprzyjemne – pacjenci są zawsze zdziwieni, że tyle się bali.",showApp:false},
+  {n:3,h:"Omówienie",p:"Wyjaśniam, co stwierdzam jako lekarz. Jaka jest prawdopodobna przyczyna objawów. Wszystko mówię zrozumiałym językiem, w Twoim tempie.",showApp:false},
+  {n:4,h:"Plan leczenia",p:"Ustalany od razu podczas pierwszej wizyty. Znasz swoje opcje – laser to jedna z nich. Wiesz, na co się nastawiać i czego się spodziewać.",showApp:false}
+];
+const TREATMENTS = [
+  {h:"Hemoroidy",p:"Zamknięcie guzków laserem od wewnątrz. Bez cięcia, bez szwów."},
+  {h:"Przetoki",p:"Laserowe zamknięcie kanału przetoki z zachowaniem zwieracza."},
+  {h:"Torbiel włosowa",p:"Minimalnie inwazyjna ablacja laserowa torbieli ogonowej."},
+  {h:"Szczelina odbytu",p:"Najczęściej stosowane leczenie:\n• Toksyna botulinowa (Botoks)\n• Laserowa ablacja szczeliny — w ostatnich latach wykonywana tylko w sytuacjach wyjątkowych; dzięki laserom pikosekundowym wracamy do tego typu zabiegów."},
+  {h:"Fałdy okołoodbytnicze",p:"Ocena i plastyka odbytu gdy wskazana.\n\n• Pierwszy w Polsce wykonywałem zabiegi z zakresu proktologii estetycznej\n• Laserowa plastyka odbytu jest częstym zabiegiem w mojej codziennej praktyce — bardzo dobre efekty estetyczne\n• Standardowo po zabiegu rekomenduję fotobiomodulację, która skraca czas gojenia o połowę"}
+];
+const REVIEWS = [
+  {t:"„Świetny lekarz z zaangażowaniem. Szczegółowo wyjaśnia problem, tłumaczy dokładnie leczenie i pozostaje w kontakcie po wizycie.”",a:"Agata",m:"Konsultacja proktologiczna · Styczeń 2026"},
+  {t:"„W bardzo trudnej sytuacji doktor Bujok pozwolił mi poczuć spokój. Dzięki trafnej diagnozie poczułem, że jest jeszcze światło w tunelu.”",a:"Igor S.",m:"Konsultacja chirurgiczna · Maj 2025"},
+  {t:"„Rzeczowo wyjaśnia schorzenia, z zaangażowaniem. Pacjent może poczuć się zaopiekowany.”",a:"Marcin",m:"Marzec 2026"},
+  {t:"„Polecam za ogromne zaangażowanie, szczegółowe wyjaśnienia oraz czas poświęcony podczas wizyty.”",a:"Wiktoria",m:"Wrzesień 2025"}
+];
+const FAQS = [
+  {q:"Jak szybko wrócę do aktywności?",a:"Większość pacjentów wraca w ciągu 1-3 dni. Praca biurowa możliwa po 4-5 dniach."},
+  {q:"Czy zabieg laserowy jest bolesny?",a:"Komfortowe znieczulenie miejscowe. Odczucia minimalne, znacznie łagodniejsze niż metody tradycyjne."},
+  {q:"Jak LHP różni się od klasycznej operacji?",a:"LHP zamyka guzki laserem od wewnątrz. Bez cięcia, bez szwów, krótsza rekonwalescencja."},
+  {q:"Czy badanie proktologiczne boli?",a:"Badanie trwa kilka minut, w pozycji bocznej. Przerywam natychmiast, jeśli poczujesz ból."},
+  {q:"Jak umówić konsultację?",a:"- Online wypełniając formularz kontaktowy\n- ZnanyLekarz\n- Telefonicznie: +48 510 432 361."}
+];
+/* Prices: Medical Lasers cennik (cennik-medical-lasers-podzial.pdf). Zakrzep — 1000 zł (szczegóły później). */
+const PRICE_NOTE_SHARED = "Całkowity koszt leczenia — bez dopłat za kolejne zabiegi w trakcie terapii.";
+const PRICES = [
+  {title:"Laserowe leczenie hemoroidów",price:"6000 zł",note:PRICE_NOTE_SHARED,noteExtra:"W cenie m.in. dwie kontrole po 2 i 6 tygodniach."},
+  {title:"Konsultacja proktologiczna",price:"400 zł",note:PRICE_NOTE_SHARED},
+  {title:"Leczenie przetoki",price:"od 4300 zł",note:PRICE_NOTE_SHARED},
+  {title:"Usunięcie zakrzepu zewnętrznego",price:"1000 zł",note:PRICE_NOTE_SHARED},
+  {title:"Gumkowanie hemoroidów (metoda Barona)",price:"700–1000 zł",note:PRICE_NOTE_SHARED}
+];
+
+class Component extends DCLogic {
+  state = { openSym:{}, openFaq:{}, openStage:{}, openStageApp:{}, openTreat:null, viewMode:'desktop', menuOpen:false, screen2Expanded:false, screen2PanX:0, screen2Focus:null, leczenieIntroOpen:false, priceIdx:0 };
+
+  componentDidMount(){
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    this._mq = window.matchMedia('(max-width: 700px)');
+    this._syncViewport = () => {
+      const next = this._mq.matches ? 'mobile' : 'desktop';
+      if (this.state.viewMode !== next) this.setState({ viewMode: next, menuOpen: false });
+    };
+    this._syncViewport();
+    if (this._mq.addEventListener) this._mq.addEventListener('change', this._syncViewport);
+    else if (this._mq.addListener) this._mq.addListener(this._syncViewport);
+  }
+
+  componentWillUnmount(){
+    if (this._mq && this._syncViewport) {
+      if (this._mq.removeEventListener) this._mq.removeEventListener('change', this._syncViewport);
+      else if (this._mq.removeListener) this._mq.removeListener(this._syncViewport);
+    }
+  }
+
+  chevStyle(open){ return { transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }; }
+  stageToggle(i){
+    return ()=>this.setState(s=>({openStage:{...s.openStage,[i]:!s.openStage[i]}}));
+  }
+  screen2StiffW = 300;
+  screen2PanMax(){
+    return Math.round(this.screen2StiffW * 0.85);
+  }
+  screen2PanAmount(){
+    const vw = (typeof window !== 'undefined' && window.innerWidth) ? window.innerWidth : 390;
+    return Math.min(Math.round(this.screen2StiffW * 0.72), Math.round(vw * 0.42));
+  }
+  screen2Toggle(){
+    this._panDrag = null;
+    this.setState(s=>{
+      const next = !s.screen2Expanded;
+      return { screen2Expanded: next, screen2PanX: 0, screen2Focus: null };
+    });
+  }
+  screen2FocusPanel(side){
+    return (e)=>{
+      if (!this.state.screen2Expanded) return;
+      if (e && e.target && e.target.closest && e.target.closest('a, button')) return;
+      if (this._panDragMoved) return;
+      if (e && e.stopPropagation) e.stopPropagation();
+      const amount = this.screen2PanAmount();
+      let panX = 0;
+      if (side === 'left' || side === 'app') panX = amount;
+      else if (side === 'right' || side === 'cta') panX = -amount;
+      this.setState({ screen2PanX: panX, screen2Focus: side });
+    };
+  }
+  screen2PanPointerDown = (e)=>{
+    if (!this.state.screen2Expanded) return;
+    if (!e || e.button === 2) return;
+    if (e.target && e.target.closest && e.target.closest('a, button, #screen2-quote-btn, #screen2-panel-left, #screen2-panel-right, #screen2-panel-app, #screen2-panel-cta')) return;
+    this._panDragMoved = false;
+    this._panDrag = {
+      id: e.pointerId,
+      startX: e.clientX,
+      originPan: this.state.screen2PanX || 0
+    };
+    try { if (e.currentTarget && e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+  };
+  screen2PanPointerMove = (e)=>{
+    if (!this._panDrag || this._panDrag.id !== e.pointerId) return;
+    const dx = e.clientX - this._panDrag.startX;
+    if (Math.abs(dx) > 6) this._panDragMoved = true;
+    const maxPan = this.screen2PanMax();
+    const next = Math.max(-maxPan, Math.min(maxPan, this._panDrag.originPan + dx));
+    this.setState({ screen2PanX: next, screen2Focus: null });
+  };
+  screen2PanPointerUp = (e)=>{
+    if (!this._panDrag) return;
+    if (e && this._panDrag.id !== e.pointerId) return;
+    this._panDrag = null;
+    // keep _panDragMoved briefly so click-to-focus after a drag is ignored
+    if (this._panDragMoved) {
+      setTimeout(()=>{ this._panDragMoved = false; }, 0);
+    }
+  };
+  stageAppToggle(i){
+    return ()=>this.setState(s=>({openStageApp:{...s.openStageApp,[i]:!s.openStageApp[i]}}));
+  }
+  priceClamp(i){
+    const n = PRICES.length;
+    return ((i % n) + n) % n;
+  }
+  priceGo(i){
+    this.setState({ priceIdx: this.priceClamp(i) });
+  }
+  pricePrev = (e)=>{
+    if (e && e.stopPropagation) e.stopPropagation();
+    this.setState(s=>({ priceIdx: this.priceClamp(s.priceIdx - 1) }));
+  };
+  priceNext = (e)=>{
+    if (e && e.stopPropagation) e.stopPropagation();
+    this.setState(s=>({ priceIdx: this.priceClamp(s.priceIdx + 1) }));
+  };
+  priceKeyDown = (e)=>{
+    if (!e) return;
+    if (e.key === 'ArrowLeft') { e.preventDefault(); this.pricePrev(); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); this.priceNext(); }
+    else if (e.key === 'Home') { e.preventDefault(); this.priceGo(0); }
+    else if (e.key === 'End') { e.preventDefault(); this.priceGo(PRICES.length - 1); }
+  };
+  pricePointerDown = (e)=>{
+    if (!e || e.button === 2) return;
+    if (e.target && e.target.closest && e.target.closest('button.koszty-nav, button.koszty-dot')) return;
+    this._priceDrag = { id: e.pointerId, x: e.clientX, moved: false };
+    try { if (e.currentTarget && e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+  };
+  pricePointerMove = (e)=>{
+    if (!this._priceDrag || this._priceDrag.id !== e.pointerId) return;
+    if (Math.abs(e.clientX - this._priceDrag.x) > 8) this._priceDrag.moved = true;
+  };
+  pricePointerUp = (e)=>{
+    if (!this._priceDrag) return;
+    if (e && this._priceDrag.id !== e.pointerId) return;
+    const dx = e ? (e.clientX - this._priceDrag.x) : 0;
+    const moved = this._priceDrag.moved;
+    this._priceDrag = null;
+    if (!moved) return;
+    const thresh = 40;
+    if (dx <= -thresh) this.priceNext();
+    else if (dx >= thresh) this.pricePrev();
+  };
+  priceReducedMotion(){
+    try {
+      return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (_) { return false; }
+  }
+
+  renderVals(){
+    const symptomItems = SYMPTOMS.map((s,i)=>({
+      icon:s.icon, label:s.label, groups:s.groups,
+      open: !!this.state.openSym[i],
+      chevStyle: this.chevStyle(!!this.state.openSym[i]),
+      toggle: ()=>this.setState(st=>({openSym:{...st.openSym,[i]:!st.openSym[i]}}))
+    }));
+    const stageItems = STAGES.map((st,i)=>{
+      const open = !!this.state.openStage[i];
+      return {
+        n:st.n, h:st.h, p:st.p, showApp:st.showApp,
+        open, chevStyle: this.chevStyle(open),
+        toggle: this.stageToggle(i),
+        logoClick: (e)=>{ e.stopPropagation(); this.stageToggle(i)(); },
+        wrapStyle: open ? { position:'relative', marginLeft:'-20px', marginRight:'-20px', width:'calc(100% + 40px)' } : { position:'relative' },
+        logoStyle: {
+          position:'absolute', right:'12px', top:'50%', transform:'translateY(-50%)', width:'62px', height:'62px',
+          background:'radial-gradient(circle, transparent 22%, rgba(0,0,0,.92) 65%), url("data:image/jpeg;base64,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qiVAj2M3+MURJLl+QhcrlkAzsCcwgAD9Tx+WTKpBQZu5leIwRAGEB3d1JOSXV5QKhUQ+zkEFiE3lgMuRCyQuhjHeWiHfojiAwp+ogqCUFgwyELdeU1UNCVBdf+AswlAA5QOB7FvCyMB4oBDAyHKLJWAer/X/AG/gWSqnTrHvRGcIaoq1G6PKWEMWsFO0Nov9IgX5wycPYKbpnrfSxdmTp6NNA7cruxKJJr/7jf/aAAwDAQACAAMAAAAQ888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888w8888888888888888888888888888888888888888884P8TZVP008888888888888888888888888888888888880ZH/BObCjTw8888888888888888888888888888888888kPQ3Qm+yz9ai048888888888888888888888888888888844ic88888Maho28888888888888888888888888888888gCQ88888888sOme8888888888888888888888888888888X88888888888Xt28888888888888888888888888888884wF8888888888870888888888888888888888888888888uv0888888888889c8888888888888888888888888888884W28888888888sVc888888888888888888888888888888sS28888888888TC88888888888888888888888888888884Ce88888884qwqZ88888888888888888888888888888884W+888846qiAxT888888888888888888888888888888888Gq8888cofQ6O/88888888888888888888888888888888sqU888sq8CiVx8888888888888888888888888888888884CU8884e0vWaF848888888888888888888888888888888oqW888sebysCiU+0888888888888888888888888888888oi+88888888+vCss8888888888888888888888888888888G88888888888XGLU888888888888888888888888888884S08888888888883O888888888888888888888888888888O8888888888888LV888888888888888888888888888884eU888888888888JK88888888888888888888888888888oSU888888888888oDU88888888888888888888888888888KU8888888888888l88888888888888888888888888888sW0888888888888gz888888888888888888888888888888aU8888888888848U88888888888888888888888888888sS888888888888h1M888888888888888888888888888884C88888888884ciR888888888888888888888888888888sy88888444kc0XY5888888888888888888888888888888oQ88888ss84iaVj8888888888888888888888888888888ua88884wodlAZ588888888888888888888888888888888s98888ShwakQM8888888888888888888888888888888888888884QAUs8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888/8QAIxEBAAIBBAEEAwAAAAAAAAAAAQARUCEw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") center/cover no-repeat',
+          border:'2px solid rgba(0,0,0,.8)', borderRadius:'2px', cursor:'pointer',
+          boxShadow:'inset 0 0 6px 2px rgba(0,0,0,.6), 0 2px 8px rgba(0,0,0,.4)',
+          transition:'filter .2s ease',
+          filter: open ? 'brightness(1.4) sepia(1) hue-rotate(140deg) saturate(4)' : 'none',
+          outline: 'none'
+        },
+        appOpen: !!this.state.openStageApp[i],
+        appChevStyle: this.chevStyle(!!this.state.openStageApp[i]),
+        toggleApp: this.stageAppToggle(i)
+      };
+    });
+    const treatments = TREATMENTS.map((t,i)=>{
+      const open = this.state.openTreat === i;
+      return {
+        h:t.h, p:t.p, open,
+        chevStyle: { color:'oklch(0.68 0.02 90)', opacity:.4, transition:'transform .2s', display:'inline-block', flexShrink:0, fontSize:'14px', ...this.chevStyle(open) },
+        toggle: ()=>this.setState(s=>({openTreat: s.openTreat === i ? null : i}))
+      };
+    });
+    const faqItems = FAQS.map((f,i)=>({
+      q:f.q, a:f.a,
+      open: !!this.state.openFaq[i],
+      chevStyle: this.chevStyle(!!this.state.openFaq[i]),
+      toggle: ()=>this.setState(s=>({openFaq:{...s.openFaq,[i]:!s.openFaq[i]}}))
+    }));
+    const appHref = (typeof window !== 'undefined' && window.__resources && window.__resources.miniApp) || 'uploads/CML%20Proktologia%20Mobile%20-%20offline%20copy.html';
+    const isMobile = this.state.viewMode === 'mobile';
+    const priceIdx = this.priceClamp(this.state.priceIdx || 0);
+    const priceReduce = this.priceReducedMotion();
+    const priceStep = isMobile ? 78 : 118;
+    const pricePlates = PRICES.map((p,i)=>{
+      const offset = i - priceIdx;
+      const abs = Math.abs(offset);
+      const active = offset === 0;
+      const rot = priceReduce ? 0 : offset * -38;
+      const z = priceReduce ? 0 : -abs * 90;
+      const scale = Math.max(0.72, 1 - abs * 0.13);
+      const x = offset * priceStep;
+      const opacity = abs > 2 ? 0 : Math.max(0.28, 1 - abs * 0.28);
+      const brightness = active ? 1 : Math.max(0.55, 1 - abs * 0.22);
+      return {
+        title: p.title,
+        price: p.price,
+        note: p.note,
+        noteExtra: p.noteExtra || '',
+        hasNoteExtra: !!p.noteExtra,
+        ariaHidden: active ? 'false' : 'true',
+        ariaCurrent: active ? 'true' : 'false',
+        ariaLabel: `${p.title}: ${p.price}`,
+        dotLabel: `Pokaż: ${p.title}`,
+        select: (e)=>{
+          if (e && e.stopPropagation) e.stopPropagation();
+          this.priceGo(i);
+        },
+        style: {
+          transform: `translate(-50%, -50%) translateX(${x}px) translateZ(${z}px) rotateY(${rot}deg) scale(${scale})`,
+          zIndex: 10 - abs,
+          opacity,
+          filter: `brightness(${brightness})`,
+          pointerEvents: abs > 2 ? 'none' : 'auto',
+          boxShadow: active
+            ? 'inset 0 0 0 1px rgba(255,255,255,.12), 0 22px 48px rgba(0,0,0,.55), 0 0 0 1px rgba(196,168,116,.28)'
+            : 'inset 0 0 0 1px rgba(255,255,255,.10), 0 18px 40px rgba(0,0,0,.45)'
+        }
+      };
+    });
+    const menuOpen = isMobile && this.state.menuOpen;
+    const btnBase = { border:0, cursor:'pointer', fontFamily:'inherit', fontSize:'13px', fontWeight:500, padding:'8px 16px', borderRadius:999 };
+    const screen2Expanded = !!this.state.screen2Expanded;
+    const screen2PanX = screen2Expanded ? (this.state.screen2PanX || 0) : 0;
+    const stiffW = `${this.screen2StiffW}px`;
+    /* Black darkened glass — same family as source .scp3, denser so depth wallpaper does not wash to milky white */
+    const blackGlassBg = 'radial-gradient(ellipse at center, rgba(20,20,20,.55) 0%, rgba(0,0,0,.82) 100%)';
+    const blackGlassBorder = '2px solid rgba(255,255,255,.18)';
+    const blackGlassBlur = 'blur(3px) saturate(140%)';
+    /* Flat UI successive windows: short travel + fade — stiff side positions, less layout fighting */
+    const flatEase = 'cubic-bezier(.22,.61,.36,1)';
+    const flatDur = '320ms';
+    const panelGlass = {
+      overflow:'hidden', borderRadius:'3px',
+      background: blackGlassBg,
+      backdropFilter: blackGlassBlur, WebkitBackdropFilter: blackGlassBlur,
+      border: blackGlassBorder, padding:'20px',
+      flexShrink:0,
+      boxSizing:'border-box',
+      width: stiffW, minWidth: stiffW, maxWidth: stiffW,
+      boxShadow:'0 14px 36px rgba(0,0,0,.55), 0 4px 12px rgba(0,0,0,.35), inset 0 0 0 1px rgba(0,0,0,.45), inset 0 -28px 44px -14px rgba(0,0,0,.7)',
+      cursor: screen2Expanded ? 'pointer' : 'default'
+    };
+    const flatPanelOpen = (delayMs) => ({
+      opacity:1, visibility:'visible', pointerEvents:'auto',
+      transitionDelay: screen2Expanded ? `${delayMs}ms` : '0ms'
+    });
+    const flatPanelClosed = (fromX, fromY) => ({
+      opacity:0, visibility:'hidden', pointerEvents:'none',
+      transform:`translate(${fromX}px, ${fromY}px)`,
+      transitionDelay:'0ms'
+    });
+    const panelMotion = `opacity ${flatDur} ${flatEase}, visibility ${flatDur} ${flatEase}, transform ${flatDur} ${flatEase}`;
+    const bottomPanelBase = {
+      position:'absolute', zIndex:50,
+      width: stiffW, minWidth: stiffW, maxWidth: stiffW,
+      boxSizing:'border-box', flexShrink:0,
+      transition: panelMotion
+    };
+    const panDragging = !!this._panDrag;
+    const ctaStyle = {
+        display:'inline-flex', alignItems:'center', justifyContent:'center',
+        borderRadius:8, padding: isMobile ? '7px 14px' : '8px 16px',
+        fontFamily:"'Cormorant Garamond',serif", fontSize: isMobile ? '16px' : '17px', fontWeight:400, letterSpacing:'.02em',
+        color:'oklch(0.95 0.03 195)',
+        backgroundImage:'linear-gradient(180deg, rgba(255,255,255,.4) 0%, rgba(255,255,255,.06) 48%, rgba(255,255,255,0) 52%, rgba(0,0,0,.15) 100%), url("data:image/jpeg;base64,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")',
+        backgroundSize:'100% 100%, 160% 160%', backgroundPosition:'center, center',
+        border:'1px solid rgba(150,235,220,.5)',
+        textShadow:'0 1px 2px rgba(0,0,0,.85)',
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,.6), inset 0 -2px 4px rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.15), 0 6px 16px rgba(0,0,0,.7)',
+        transition:'transform .15s'
+      };
+    const ctaCallStyle = { ...ctaStyle, color: '#ffffff' };
+    return {
+      symptomItems, faqItems, pricePlates, isMobile, menuOpen, appHref,
+      pricePrev: this.pricePrev,
+      priceNext: this.priceNext,
+      priceKeyDown: this.priceKeyDown,
+      pricePointerDown: this.pricePointerDown,
+      pricePointerMove: this.pricePointerMove,
+      pricePointerUp: this.pricePointerUp,
+      screen2Expanded,
+      screen2Toggle: ()=>this.screen2Toggle(),
+      screen2FocusLeft: this.screen2FocusPanel('left'),
+      screen2FocusRight: this.screen2FocusPanel('right'),
+      screen2FocusApp: this.screen2FocusPanel('app'),
+      screen2FocusCta: this.screen2FocusPanel('cta'),
+      screen2PanPointerDown: this.screen2PanPointerDown,
+      screen2PanPointerMove: this.screen2PanPointerMove,
+      screen2PanPointerUp: this.screen2PanPointerUp,
+      screen2PanelAriaHidden: screen2Expanded ? 'false' : 'true',
+      screen2CanvasStyle: {
+        position:'relative', zIndex:1, width:'100%', maxWidth:'1120px', minHeight:'100svh',
+        margin:'0 auto', padding: isMobile ? '24px 16px' : '32px 24px', boxSizing:'border-box',
+        display:'flex', flexDirection:'column', alignItems:'center',
+        justifyContent:'center',
+        overflow:'visible',
+        transform:`translateX(${screen2PanX}px)`,
+        transition: panDragging ? 'none' : `transform 380ms ${flatEase}`,
+        touchAction: screen2Expanded ? 'pan-y' : 'auto',
+        cursor: screen2Expanded ? (panDragging ? 'grabbing' : 'grab') : 'auto'
+      },
+      screen2PanelLeftStyle: {
+        ...panelGlass,
+        position:'absolute',
+        left:'0',
+        top:'0',
+        zIndex:50,
+        transition: panelMotion,
+        ...(screen2Expanded
+          ? { ...flatPanelOpen(0), transform:'translate(0, 0)' }
+          : flatPanelClosed(-12, -10))
+      },
+      screen2PanelRightStyle: {
+        ...panelGlass,
+        position:'absolute',
+        right:'0',
+        top:'0',
+        zIndex:50,
+        transition: panelMotion,
+        ...(screen2Expanded
+          ? { ...flatPanelOpen(50), transform:'translate(0, 0)' }
+          : flatPanelClosed(12, -10))
+      },
+      screen2PanelAppStyle: {
+        ...bottomPanelBase,
+        ...panelGlass,
+        left:'0',
+        bottom:'0',
+        borderRadius:'1px',
+        padding:'20px 24px',
+        ...(screen2Expanded
+          ? { ...flatPanelOpen(100), transform:'translate(0, 0)' }
+          : flatPanelClosed(-12, 10))
+      },
+      screen2PanelCtaStyle: {
+        ...bottomPanelBase,
+        ...panelGlass,
+        /* lower-right of stage, clear of quote marble; z stays ≥50 (in front of quote z:2) */
+        right:'0',
+        bottom:'0',
+        zIndex:50,
+        borderRadius:'1px',
+        padding:'16px',
+        boxShadow:'0 14px 36px rgba(0,0,0,.55), 0 4px 12px rgba(0,0,0,.35), inset 0 0 0 1px rgba(0,0,0,.45), inset 0 -40px 50px -10px rgba(0,0,0,.85)',
+        ...(screen2Expanded
+          ? { ...flatPanelOpen(150), transform:'translate(0, 0)' }
+          : flatPanelClosed(12, 10))
+      },
+      screen2QuoteStyle: {
+        width:'100%', maxWidth:'100%', margin:0, position:'relative', zIndex:1, overflow:'hidden', borderRadius:'2px',
+        flex:'0 1 auto', minHeight:0, display:'flex', flexDirection:'column', justifyContent:'flex-start',
+        /* Crop past PNG baked gold bars; thin CSS L-frames carry the gold mark (~1mm inset) */
+        background:"image-set(url('/cml/screen2-quote-tile.webp') type('image/webp'),url('/cml/screen2-quote-tile.png') type('image/png')) center / 120% 136% no-repeat",
+        backgroundSize:'120% 136%', backgroundPosition:'center', backgroundRepeat:'no-repeat',
+        border:'1px solid rgba(0,0,0,.45)',
+        /* Equal top/bottom pad: CYTAT↔top gold arm ≈ Jan Bujok↔bottom gold arm; shorter plate */
+        padding:'clamp(11px,2.1vw,15px) clamp(26px,4.8vw,38px)',
+        boxShadow:'0 3px 6px rgba(0,0,0,.42), 0 6px 12px rgba(0,0,0,.52), 0 12px 24px rgba(0,0,0,.62), 0 18px 36px rgba(0,0,0,.48)',
+        cursor:'default'
+      },
+      screen2QuoteLabelStyle: {
+        fontSize:'clamp(15px,2.6vw,20px)', textTransform:'uppercase', letterSpacing:'.18em',
+        margin:0, lineHeight:1.2, flexShrink:0,
+        background:'linear-gradient(100deg, oklch(0.62 0.1 75) 0%, oklch(0.88 0.15 90) 25%, oklch(0.95 0.16 95) 45%, oklch(0.7 0.12 80) 65%, oklch(0.88 0.15 90) 85%, oklch(0.62 0.1 75) 100%)',
+        WebkitBackgroundClip:'text', backgroundClip:'text', color:'transparent',
+        filter:'drop-shadow(1px 1px 0 rgba(0,0,0,.58)) drop-shadow(2px 2px 3px rgba(0,0,0,.42)) drop-shadow(-1px -1px 0 rgba(255,248,235,.14))'
+      },
+      visitFlow: VISIT_FLOW, stageItems, treatments, reviews: REVIEWS,
+      setDesktop: ()=>this.setState({viewMode:'desktop', menuOpen:false}),
+      setMobile: ()=>this.setState({viewMode:'mobile'}),
+      toggleMenu: ()=>this.setState(s=>({menuOpen:!s.menuOpen})),
+      leczenieIntroOpen: !!this.state.leczenieIntroOpen,
+      toggleLeczenieIntro: ()=>this.setState(s=>({leczenieIntroOpen:!s.leczenieIntroOpen})),
+      leczenieIntroChevStyle: { color:'oklch(0.68 0.02 90)', opacity:.4, transition:'transform .2s', display:'inline-block', flexShrink:0, fontSize:'14px', ...this.chevStyle(!!this.state.leczenieIntroOpen) },
+      desktopBtnStyle: { ...btnBase, background: isMobile ? 'transparent' : 'oklch(0.9 0.15 50)', color: isMobile ? 'rgba(255,255,255,.6)' : 'oklch(0.99 0.01 85)' },
+      mobileBtnStyle: { ...btnBase, background: isMobile ? 'oklch(0.9 0.15 50)' : 'transparent', color: isMobile ? 'oklch(0.99 0.01 85)' : 'rgba(255,255,255,.6)' },
+      outerWrapStyle: { minHeight:'100vh', display:'block', background:'oklch(0.14 0.015 240)' },
+      frameStyle: { width:'100%', maxWidth:'100%', background:'oklch(0.14 0.015 240)', overflow:'visible' },
+      desktopNavStyle: isMobile ? { display:'none' } : { display:'flex', gap:'28px', flexWrap:'wrap', fontSize:'14px', color:'rgba(255,255,255,.75)' },
+      ctaStyle,
+      ctaCallStyle,
+      barTopStyle: { transform: menuOpen ? 'translateY(6px) rotate(45deg)' : 'none' },
+      barMidStyle: { opacity: menuOpen ? 0 : 1 },
+      barBotStyle: { transform: menuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none' },
+      onSubmit: (e)=>{ e.preventDefault(); alert('Wiadomość została przygotowana. W trybie offline formularz nie wysyła danych.'); }
+    };
+  }
+}
+</script>
+
+
+</body></html>

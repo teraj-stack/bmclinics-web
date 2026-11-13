@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Current location icon">
+<foreignObject x="-10" y="-10" width="64" height="64"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(5px);clip-path:url(#bgblur_0_0_272_clip_path);height:100%;width:100%"></div></foreignObject><circle id="area" data-figma-bg-blur-radius="10" cx="22" cy="22" r="22" fill="#0BDBFB" fill-opacity="0.1"/>
+<foreignObject x="-3.84" y="-3.84" width="51.68" height="51.68"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(5px);clip-path:url(#bgblur_1_0_272_clip_path);height:100%;width:100%"></div></foreignObject><circle id="area_2" data-figma-bg-blur-radius="10" cx="22" cy="22" r="15.84" fill="#0BDBFB" fill-opacity="0.4"/>
+<circle id="user" cx="22.33" cy="22.33" r="7.04" fill="#0BDBFB" stroke="#F6F6F6" stroke-width="1.5"/>
+</g>
+<defs>
+<clipPath id="bgblur_0_0_272_clip_path" transform="translate(10 10)"><circle cx="22" cy="22" r="22"/>
+</clipPath><clipPath id="bgblur_1_0_272_clip_path" transform="translate(3.84 3.84)"><circle cx="22" cy="22" r="15.84"/>
+</clipPath></defs>
+</svg>

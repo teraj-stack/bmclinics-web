@@ -1,0 +1,16 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="42.7812" height="42.7812" viewBox="0 0 42.7812 42.7812" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Ellipse 4 blur" filter="url(#filter0_f_0_319)">
+<path d="M41.3906 21.3906C41.3906 32.4363 32.4363 41.3906 21.3906 41.3906C10.3449 41.3906 1.39062 32.4363 1.39062 21.3906C1.39062 10.3449 10.3449 1.39062 21.3906 1.39062C32.4363 1.39062 41.3906 10.3449 41.3906 21.3906ZM3.27988 21.3906C3.27988 31.3929 11.3883 39.5014 21.3906 39.5014C31.3929 39.5014 39.5014 31.3929 39.5014 21.3906C39.5014 11.3883 31.3929 3.27988 21.3906 3.27988C11.3883 3.27988 3.27988 11.3883 3.27988 21.3906Z" fill="url(#paint0_linear_0_319)"/>
+</g>
+<defs>
+<filter id="filter0_f_0_319" x="0" y="0" width="42.7812" height="42.7812" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="0.695312" result="effect1_foregroundBlur_0_319"/>
+</filter>
+<linearGradient id="paint0_linear_0_319" x1="4.69481" y1="8.42565" x2="21.3906" y2="41.3906" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#CBD0D9"/>
+</linearGradient>
+</defs>
+</svg>

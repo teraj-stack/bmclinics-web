@@ -1,0 +1,28 @@
+---
+description: CML visual work — design first, craft implementer second. No mid-flight inventing.
+alwaysApply: true
+---
+
+# CML team roles (Dr Bujok)
+
+When the user asks for visual / screen / logo / layout work on CML or brand surfaces, do **not** freestyle alone. Use a two-step team:
+
+## 1) Design (first)
+
+- Spawn a **design** specialist (frontend-design skill / design-brief agent).
+- Job: look at the live screen + handed assets (logo, BMCMLa, photos), propose **one** concrete visual solution (sizes, edges, materials, placement) in plain language or a tiny mock — **before** code churn.
+- Respect locked rules in `cml-surgeon-direction.mdc` and “copy the file, don’t reinvent.”
+- If the user already gave an exact plan, design only clarifies measurements / references — no alternative aesthetics.
+
+## 2) Craft implementer (second)
+
+- Spawn a separate **implementation** agent whose only job is exact execution: copy CSS/HTML from the approved brief or source file, pixel-faithful, no philosophy, no “while we’re here.”
+- Prefer the model/agent used for careful code edits; no redesign commentary in the diff.
+- Stop after the brief is implemented. Wait for the user’s eye.
+
+## Hard stops
+
+- Do **not** iterate logo/chrome/hero in a loop of micro-guesses.
+- If the user says revert / don’t touch — revert to last good commit or last approved state and **stop**.
+- Commit only when the user says so.
+- Monotask: one visual ask at a time.

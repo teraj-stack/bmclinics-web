@@ -1,0 +1,60 @@
+---
+description: Figma 3D UI Perspective list-template language for building BMClinic/CML pages (glass plates, floating icon rows, depth). Attach when designing or building new pages/sections.
+alwaysApply: false
+---
+
+# Figma template — 3D UI Perspective (page building)
+
+**Prefer this template language when building new pages** unless the user overrides.
+
+## Source
+
+- URL: https://www.figma.com/design/TpYELC644fx4MqiiojRLOl/3D-UI-Perspective--Community-?node-id=3544-509&m=dev
+- fileKey: `TpYELC644fx4MqiiojRLOl`
+- nodeId: `3544:509` (frame: **List**)
+- Reference PNG: `refs/figma/3d-ui-perspective/list-3544-509.png`
+
+## What it is
+
+Frosted-glass vertical **list card** with soft lavender atmosphere. Rows = floating circular icon disc + short text stack + thin progress/separator. Canvas presentation uses **3D perspective tilt** (floating slab).
+
+Do **not** copy DesignCode course copy, Swift/React/Flutter logos, or lavender marketing chrome as BMClinic brand. Reuse **structure + depth + glass list grammar**.
+
+## Structure
+
+```
+List (glass plate)
+ ├── Row × N
+ │    ├── Play / icon disc (~52px, soft shadow, optional gradient ring)
+ │    └── Text
+ │         ├── category (UPPERCASE, small)
+ │         ├── title
+ │         ├── short body
+ │         └── Progress (thin track)
+ └── hairline separators between rows
+```
+
+| Token | Source value (adapt) |
+|-------|----------------------|
+| Plate fill | `rgba(255,255,255,0.4)` + `backdrop-filter: blur(20px)` |
+| Radius / padding / gap | ~25px / ~17px / ~13px |
+| Icon disc | ~52px circle, multi-layer soft shadow, elevated Z |
+| Category | ~11px semibold, uppercase, opacity ~0.7 |
+| Title | ~14px semibold, opacity ~0.6 |
+| Body | ~10px regular |
+| Separator | ~1px `rgba(0,0,0,0.4)` (+ overlay blend in source) |
+| Progress | ~111×3px track; white fill segment |
+| Source accents | lavender atmosphere; `#00CFFD`; black labels |
+
+## 3D perspective cues
+
+- Parent `perspective`; plate `transform: rotateX() rotateY()` (slight Z if needed) for diagonal recede
+- Soft diffuse shadows for elevation; discs above text/plate
+- Keep icon discs **square** — never stretch
+
+## BMClinic / CML reuse
+
+1. Keep grammar: glass plate → stacked rows → floating icon + short hierarchy + hairlines.
+2. Remap materials to locked brand: black / `#1D1B16`, gold `#C4A874`, **transparent dark glass** (radial wash + light border + blur) — see `cml-surgeon-direction` / `cml-objawy-glass-system`. Translate frosted white → dark glass; do not invent milky cards over living-wall.
+3. Prefer images/frames over long copy.
+4. **Brand caveat:** CML hero photo rules stay locked (full-bleed gabinet, yellow waterfall, green tree left, no hue-rotate, text in thumb zone). Use this language for lists, boards, secondary/promo plates — **not** to rewrite the locked hero.
