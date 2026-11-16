@@ -52,7 +52,11 @@ export async function checkAvailability(
     },
   });
 
-  return res.data.calendars?.[calendarId]?.busy ?? [];
+  const calendarResult = res.data.calendars?.[calendarId];
+  if (!calendarResult || (calendarResult.errors && calendarResult.errors.length > 0)) {
+    throw new Error('Nie udało się odczytać zajętości kalendarza');
+  }
+  return calendarResult.busy ?? [];
 }
 
 export async function createCalendarEvent(
@@ -81,4 +85,10 @@ export async function createCalendarEvent(
   });
 
   return res.data;
+}
+
+export async function deleteCalendarEvent(refreshToken: string, calendarId: string, eventId: string) {
+  const auth = getAuthorizedClient(refreshToken);
+  const calendar = google.calendar({ version: 'v3', auth });
+  await calendar.events.delete({ calendarId, eventId, sendUpdates: 'none' });
 }
