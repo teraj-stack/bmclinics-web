@@ -29,8 +29,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        const customRole = (user as { role?: string }).role;
-        token.role = customRole ?? 'PATIENT';
+        // Resolve role from the trusted database rather than user-supplied input.
+        const dbUser = await prisma.user.findUnique({ where: { id: user.id }, select: { role: true } });
+        token.role = dbUser?.role ?? 'PATIENT';
         token.userId = user.id;
         token.email = user.email;
         token.name = user.name;
