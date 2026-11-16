@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkAvailability } from '@/lib/googleCalendar';
 import { getDoctorCalendarCreds } from '@/lib/doctors';
 import { getServiceById } from '@/lib/servicesCatalog';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(req: NextRequest) {
   const doctorId = req.nextUrl.searchParams.get('doctorId');
@@ -13,7 +14,8 @@ export async function GET(req: NextRequest) {
   }
 
   const service = await getServiceById(serviceId);
-  const durationMin = service?.durationMin ?? 30;
+  if (!service) return NextResponse.json({ error: 'Nie znaleziono usługi' }, { status: 404 });
+  const durationMin = service.durationMin;
 
   if (!process.env.DATABASE_URL || !process.env.GOOGLE_CLIENT_ID) {
     return NextResponse.json({ error: 'Terminarz jest chwilowo niedostępny' }, { status: 503 });
@@ -41,6 +43,19 @@ export async function GET(req: NextRequest) {
         workStart.toISOString(),
         workEnd.toISOString()
       );
+      const dbVisits = await prisma.visit.findMany({
+        where: {
+          doctorId,
+          status: { in: ['PROPOSED', 'CONFIRMED'] },
+          startTime: { lt: workEnd },
+          endTime: { gt: workStart },
+        },
+        select: { startTime: true, endTime: true },
+      });
+      busy.push(...dbVisits.map((v) => ({
+        start: v.startTime.toISOString(),
+        end: v.endTime.toISOString(),
+      })));
     } catch {
       return NextResponse.json({ error: 'Nie udało się sprawdzić dostępności terminów' }, { status: 502 });
     }
