@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { randomUUID } from 'crypto';
 import { createCalendarEvent } from '@/lib/googleCalendar';
 import { getDoctorCalendarCreds } from '@/lib/doctors';
 import { savePendingVisit } from '@/lib/visits';
@@ -16,6 +15,10 @@ export async function POST(req: NextRequest) {
     const service = await getServiceById(serviceId);
     if (!service) {
       return NextResponse.json({ error: 'Nie znaleziono wybranej usługi' }, { status: 404 });
+    }
+
+    if (!process.env.DATABASE_URL || !process.env.GOOGLE_CLIENT_ID) {
+      return NextResponse.json({ error: 'System rezerwacji jest chwilowo niedostępny' }, { status: 503 });
     }
 
     if (process.env.DATABASE_URL && process.env.GOOGLE_CLIENT_ID) {
@@ -40,11 +43,11 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ status: 'ok', visitId: visit.id });
       } catch {
-        // Fallback to local demo reservation if Google Calendar / DB is not connected
+        return NextResponse.json({ error: 'Nie udało się potwierdzić wizyty w kalendarzu' }, { status: 502 });
       }
     }
 
-    return NextResponse.json({ status: 'ok', visitId: `demo-${randomUUID()}`, demo: true });
+    return NextResponse.json({ error: 'Rezerwacja nie została zapisana' }, { status: 503 });
   } catch {
     return NextResponse.json({ error: 'Nie udało się utworzyć rezerwacji' }, { status: 502 });
   }
