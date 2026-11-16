@@ -13,6 +13,8 @@ import {
   type CmsState,
 } from '@/lib/cmsStore';
 import type { CatalogService } from '@/lib/servicesCatalog';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,6 +28,10 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (session?.user?.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Brak uprawnień administratora' }, { status: 403 });
+  }
   try {
     const body = await req.json();
     const action = body?.action as string | undefined;
