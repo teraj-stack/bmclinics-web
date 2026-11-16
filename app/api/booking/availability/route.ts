@@ -15,6 +15,10 @@ export async function GET(req: NextRequest) {
   const service = await getServiceById(serviceId);
   const durationMin = service?.durationMin ?? 30;
 
+  if (!process.env.DATABASE_URL || !process.env.GOOGLE_CLIENT_ID) {
+    return NextResponse.json({ error: 'Terminarz jest chwilowo niedostępny' }, { status: 503 });
+  }
+
   let workStartHour = 9;
   let workEndHour = 19;
   let busy: { start?: string | null; end?: string | null }[] = [];
@@ -38,7 +42,7 @@ export async function GET(req: NextRequest) {
         workEnd.toISOString()
       );
     } catch {
-      busy = [];
+      return NextResponse.json({ error: 'Nie udało się sprawdzić dostępności terminów' }, { status: 502 });
     }
   }
 
