@@ -2,7 +2,6 @@
 
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   ShieldCheck,
@@ -17,47 +16,26 @@ import {
 
 export default function LogowaniePage() {
   const { data: session, status: sessionStatus } = useSession();
-  const router = useRouter();
-  const [email, setEmail] = useState('mlasers0110@icloud.com');
-  const [role, setRole] = useState<'ADMIN' | 'DOCTOR' | 'PATIENT'>('ADMIN');
+  const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  async function handleLogin(
-    targetEmail: string,
-    targetRole: 'ADMIN' | 'DOCTOR' | 'PATIENT',
-    redirectTo?: string
-  ) {
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
     setStatus('loading');
     setErrorMessage('');
     try {
-      const result = await signIn('credentials', {
-        email: targetEmail,
-        role: targetRole,
-        redirect: false,
-      });
-
+      const result = await signIn('email', { email, redirect: false, callbackUrl: '/pacjent' });
       if (result?.ok) {
         setStatus('success');
-        router.refresh();
-        if (redirectTo) {
-          router.push(redirectTo);
-        }
       } else {
         setStatus('error');
-        setErrorMessage('Nie udało się zalogować. Spróbuj ponownie.');
+        setErrorMessage('Logowanie e-mail jest niedostępne. Skontaktuj się z administratorem.');
       }
     } catch {
       setStatus('error');
-      setErrorMessage('Wystąpił błąd połączenia podczas logowania.');
+      setErrorMessage('Nie udało się wysłać linku logowania.');
     }
-  }
-
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const defaultRedirect =
-      role === 'ADMIN' ? '/admin' : role === 'DOCTOR' ? '/lekarz' : '/pacjent';
-    await handleLogin(email, role, defaultRedirect);
   }
 
   return (
@@ -70,8 +48,7 @@ export default function LogowaniePage() {
           Logowanie do systemu BM Clinics
         </h1>
         <p className="text-sm opacity-75">
-          Zaloguj się na konto właściciela (<strong>mlasers0110@icloud.com</strong>), aby zarządzać
-          kliniką, cennikiem oraz edytować stronę na żywo w przeglądarce i przez CLI.
+          Podaj adres e-mail przypisany do konta. System wyśle link logowania, jeżeli obsługa e-mail została skonfigurowana.
         </p>
       </div>
 
@@ -143,48 +120,6 @@ export default function LogowaniePage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Quick 1-click access cards */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <button
-              type="button"
-              disabled={status === 'loading'}
-              onClick={() => handleLogin('mlasers0110@icloud.com', 'ADMIN', '/admin')}
-              className="metal-gold-edge flex flex-col items-start justify-between rounded-xl bg-[#181612] p-4 text-left text-white transition hover:bg-[#221f19]"
-            >
-              <Sparkles className="h-5 w-5 text-[#d4af37]" />
-              <div className="mt-3">
-                <p className="text-xs font-semibold text-[#f4e7c3]">Właściciel / Admin</p>
-                <p className="mt-0.5 text-[11px] text-zinc-400">mlasers0110@icloud.com</p>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              disabled={status === 'loading'}
-              onClick={() => handleLogin('mlasers0110@icloud.com', 'ADMIN', '/?edit=1')}
-              className="metal-chrome-edge flex flex-col items-start justify-between rounded-xl bg-[#181612] p-4 text-left text-white transition hover:bg-[#221f19]"
-            >
-              <Edit3 className="h-5 w-5 text-[#d4af37]" />
-              <div className="mt-3">
-                <p className="text-xs font-semibold text-white">Edytor na żywo</p>
-                <p className="mt-0.5 text-[11px] text-zinc-400">Edytuj teksty i cennik</p>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              disabled={status === 'loading'}
-              onClick={() => handleLogin('jan.bujok@bmclinic.net', 'DOCTOR', '/lekarz')}
-              className="metal-chrome-edge flex flex-col items-start justify-between rounded-xl bg-[#181612] p-4 text-left text-white transition hover:bg-[#221f19]"
-            >
-              <Stethoscope className="h-5 w-5 text-[#d4af37]" />
-              <div className="mt-3">
-                <p className="text-xs font-semibold text-white">Panel Lekarza</p>
-                <p className="mt-0.5 text-[11px] text-zinc-400">dr Jan Bujok</p>
-              </div>
-            </button>
-          </div>
-
           {/* Standard form */}
           <form
             onSubmit={onSubmit}
@@ -204,28 +139,15 @@ export default function LogowaniePage() {
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="block text-xs font-medium opacity-80">Tryb dostępu</label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value as 'ADMIN' | 'DOCTOR' | 'PATIENT')}
-                className="w-full rounded-xl border bg-transparent p-3 text-sm"
-                style={{ borderColor: 'var(--border-color)' }}
-              >
-                <option value="ADMIN">Administrator & Edytor CMS (Pełny dostęp)</option>
-                <option value="DOCTOR">Lekarz (Kalendarz i Wizyty)</option>
-                <option value="PATIENT">Pacjent (Moje wizyty i Profil)</option>
-              </select>
-            </div>
-
             <button
               type="submit"
               disabled={status === 'loading'}
               className="btn-gold w-full rounded-xl px-4 py-3.5 text-sm font-semibold"
             >
-              {status === 'loading' ? 'Logowanie...' : 'Zaloguj się i przejdź do panelu'}
+              {status === 'loading' ? 'Logowanie...' : 'Wyślij bezpieczny link logowania'}
             </button>
 
+            {status === 'success' && <p className="text-sm text-green-500">Sprawdź skrzynkę pocztową, aby dokończyć logowanie.</p>}
             {status === 'error' && <p className="text-sm text-red-500">{errorMessage}</p>}
           </form>
         </div>

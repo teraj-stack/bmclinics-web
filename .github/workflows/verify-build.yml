@@ -1,0 +1,21 @@
+name: Verify build
+on:
+  pull_request:
+  push:
+    branches:
+      - audit/security-booking-2026-11-16
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+        env:
+          DATABASE_URL: postgresql://demo:demo@localhost:5432/bmclinic_build_only
+          NEXTAUTH_SECRET: ci-only-not-for-production

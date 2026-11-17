@@ -48,6 +48,7 @@ export default function BookingForm({
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
+  const [bookingError, setBookingError] = useState('');
 
   // Load available slots whenever serviceId, doctorId, or date changes
   useEffect(() => {
@@ -61,15 +62,19 @@ export default function BookingForm({
           `/api/booking/availability?doctorId=${doctorId}&serviceId=${serviceId}&date=${date}`
         );
         const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Terminarz chwilowo niedostępny');
         if (!isCancelled) {
+          setBookingError('');
           setSlots(data.slots ?? []);
           setSelectedSlot(null);
           setStatus('idle');
         }
-      } catch {
+      } catch (err) {
         if (!isCancelled) {
           setSlots([]);
-          setStatus('idle');
+          setSelectedSlot(null);
+          setBookingError(err instanceof Error ? err.message : 'Nie udało się sprawdzić terminów');
+          setStatus('error');
         }
       }
     }
@@ -84,6 +89,7 @@ export default function BookingForm({
   async function submitBooking() {
     if (!selectedSlot || !email) return;
     setStatus('loading');
+    setBookingError('');
     try {
       const res = await fetch('/api/booking', {
         method: 'POST',
@@ -98,8 +104,15 @@ export default function BookingForm({
           end: selectedSlot.end,
         }),
       });
-      setStatus(res.ok ? 'done' : 'error');
+      const result = await res.json();
+      if (res.ok && result.status === 'ok' && result.visitId) {
+        setStatus('done');
+      } else {
+        setBookingError(result.error || 'Nie udało się potwierdzić rezerwacji');
+        setStatus('error');
+      }
     } catch {
+      setBookingError('Brak połączenia z systemem rezerwacji');
       setStatus('error');
     }
   }
@@ -117,7 +130,7 @@ export default function BookingForm({
           Wizyta Zarezerwowana!
         </h2>
         <p className="text-slate-600 dark:text-slate-300 text-sm max-w-md mx-auto leading-relaxed">
-          Potwierdzenie rezerwacji oraz szczegóły dojazdu wysłaliśmy na adres e-mail:{' '}
+          Wizyta została zapisana w systemie. Adres e-mail podany przy rezerwacji:{' '}
           <strong className="text-slate-900 dark:text-white">{email}</strong>.
         </p>
 
@@ -236,6 +249,7 @@ export default function BookingForm({
           className="w-full rounded-xl border border-slate-300 bg-white p-3.5 text-sm font-medium text-slate-900 shadow-sm focus:border-amber-500 focus:outline-none dark:border-slate-800 dark:bg-slate-900 dark:text-white"
         />
 
+        {bookingError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{bookingError}</p>}
         {status === 'loading' && (
           <p className="text-xs text-slate-500 animate-pulse">Sprawdzanie wolnych terminów...</p>
         )}

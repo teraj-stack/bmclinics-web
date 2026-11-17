@@ -1,20 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { exchangeCodeForTokens } from '@/lib/googleCalendar';
-import { saveDoctorRefreshTokenEncrypted } from '@/lib/doctors';
+import { NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest) {
-  const code = req.nextUrl.searchParams.get('code');
-  const doctorId = req.nextUrl.searchParams.get('state');
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || req.nextUrl.origin;
-
-  if (!code || !doctorId) {
-    return NextResponse.redirect(`${baseUrl}/lekarz/kalendarz?error=1`);
-  }
-
-  const tokens = await exchangeCodeForTokens(code);
-  if (tokens.refresh_token) {
-    await saveDoctorRefreshTokenEncrypted(doctorId, tokens.refresh_token);
-  }
-
-  return NextResponse.redirect(`${baseUrl}/lekarz/kalendarz?connected=1`);
+// Do not exchange OAuth codes or persist tokens without validating session
+// ownership and a one-time cryptographic state bound to the initiating user.
+export async function GET() {
+  return NextResponse.json({ error: 'Integracja kalendarza jest tymczasowo wyłączona' }, { status: 503 });
 }
