@@ -15,6 +15,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin/uslugi">Usługi</Link>
           <Link href="/admin/lekarze">Lekarze</Link>
           <Link href="/admin/zamowienia">Zamówienia</Link>
+          <Link href="/admin/chronos">Chronos (Kalendarz / PDF / AI)</Link>
         </nav>
       </aside>
       <main className="flex-1 p-6">{children}</main>
