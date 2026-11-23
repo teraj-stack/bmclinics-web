@@ -290,16 +290,6 @@ export const FALLBACK_SERVICES: CatalogService[] = [
 ];
 
 export async function getServicesCatalog(): Promise<CatalogService[]> {
-  try {
-    const { getCmsState } = await import('./cmsStore');
-    const cms = getCmsState();
-    if (cms.services && cms.services.length > 0) {
-      return cms.services;
-    }
-  } catch {
-    // ignore
-  }
-
   if (process.env.DATABASE_URL) {
     try {
       const dbServices = await prisma.service.findMany({
@@ -329,16 +319,6 @@ export async function getServiceById(id: string): Promise<CatalogService | null>
 }
 
 export async function getDoctorsCatalog(): Promise<CatalogDoctor[]> {
-  try {
-    const { getCmsState } = await import('./cmsStore');
-    const cms = getCmsState();
-    if (cms.doctors && cms.doctors.length > 0) {
-      return cms.doctors;
-    }
-  } catch {
-    // ignore
-  }
-
   if (process.env.DATABASE_URL) {
     try {
       const dbDoctors = await prisma.doctor.findMany({

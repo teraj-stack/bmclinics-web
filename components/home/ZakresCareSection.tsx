@@ -196,25 +196,16 @@ function ZakresWindowCard({
   );
 }
 
-import type { CmsSiteConfig } from '@/lib/cmsStore';
-
 /**
  * Stack: (1) full-bleed lobby hero — photo only, one viewport;
  * (2) one shared black kafelek (`.zakres-segment`) with heading + three
  *     specialty plates — tinted glass fills, no window parallax.
  * Plates: Figma 3D UI Perspective floating-plate lift on select.
  */
-export default function ZakresCareSection({
-  initialConfig,
-}: {
-  initialConfig?: CmsSiteConfig;
-}) {
+export default function ZakresCareSection() {
   const [expandedTone, setExpandedTone] = useState<SpecialtyTone | null>(null);
   const platesRef = useRef<HTMLDivElement>(null);
   const baseId = useId();
-  const specialties = initialConfig?.specialties?.length
-    ? initialConfig.specialties
-    : SPECIALTIES;
 
   useEffect(() => {
     if (expandedTone === null) return;
@@ -262,17 +253,11 @@ export default function ZakresCareSection({
         <div className="mx-auto w-full max-w-6xl overflow-visible">
           <div className="zakres-segment">
             <div className="zakres-segment-head max-w-xl">
-              <p
-                data-cms-field="heroEyebrow"
-                className="text-brushed-gold text-[10px] font-medium uppercase tracking-[0.2em] sm:text-[11px]"
-              >
-                {initialConfig?.heroEyebrow ?? 'Zakres opieki'}
+              <p className="text-brushed-gold text-[10px] font-medium uppercase tracking-[0.2em] sm:text-[11px]">
+                Zakres opieki
               </p>
-              <h2
-                data-cms-field="heroTitle"
-                className="text-graphite-polished mt-1 font-[family-name:var(--font-fraunces)] text-2xl font-light tracking-[-0.03em] sm:text-3xl"
-              >
-                {initialConfig?.heroTitle ?? 'Trzy ścieżki kliniczne'}
+              <h2 className="text-graphite-polished mt-1 font-[family-name:var(--font-fraunces)] text-2xl font-light tracking-[-0.03em] sm:text-3xl">
+                Trzy ścieżki kliniczne
               </h2>
             </div>
 
@@ -280,7 +265,7 @@ export default function ZakresCareSection({
               ref={platesRef}
               className="zakres-plates mt-8 grid gap-8 sm:mt-10 sm:gap-10 lg:gap-12"
             >
-              {specialties.map((s) => (
+              {SPECIALTIES.map((s) => (
                 <ZakresWindowCard
                   key={s.href}
                   specialty={s}

@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-const AUTH_SECRET =
-  process.env.NEXTAUTH_SECRET || 'bmclinics-live-cms-secret-2026-mlasers0110';
-
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: AUTH_SECRET });
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (req.nextUrl.pathname.startsWith('/admin') && token?.role !== 'ADMIN') {
     return NextResponse.redirect(new URL('/logowanie', req.url));

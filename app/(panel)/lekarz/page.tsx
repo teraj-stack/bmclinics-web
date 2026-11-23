@@ -2,10 +2,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
 import { getDoctorByUserId } from '@/lib/doctors';
-import { getCmsState } from '@/lib/cmsStore';
 import { updateVisitStatus } from './actions';
-
-export const dynamic = 'force-dynamic';
 
 function todayRange() {
   const start = new Date();
@@ -17,38 +14,14 @@ function todayRange() {
 
 export default async function LekarzDzisPage() {
   const session = await getServerSession(authOptions);
-  const cms = getCmsState();
+  const doctor = await getDoctorByUserId(session!.user.id);
+  const { start, end } = todayRange();
 
-  let visits: {
-    id: string;
-    startTime: Date;
-    status: string;
-    patient: { user: { name?: string | null; email: string } };
-    service: { name: string };
-  }[] = cms.visits.map((v) => ({
-    id: v.id,
-    startTime: new Date(v.startTime),
-    status: v.status,
-    patient: { user: { name: v.patientName, email: v.patientEmail } },
-    service: { name: v.serviceName },
-  }));
-
-  if (session?.user?.id && process.env.DATABASE_URL) {
-    try {
-      const doctor = await getDoctorByUserId(session.user.id);
-      const { start, end } = todayRange();
-      const dbVisits = await prisma.visit.findMany({
-        where: { doctorId: doctor.id, startTime: { gte: start, lt: end } },
-        include: { patient: { include: { user: true } }, service: true },
-        orderBy: { startTime: 'asc' },
-      });
-      if (dbVisits.length > 0) {
-        visits = dbVisits;
-      }
-    } catch {
-      // Fallback to CMS visits
-    }
-  }
+  const visits = await prisma.visit.findMany({
+    where: { doctorId: doctor.id, startTime: { gte: start, lt: end } },
+    include: { patient: { include: { user: true } }, service: true },
+    orderBy: { startTime: 'asc' },
+  });
 
   return (
     <div className="space-y-4">
@@ -71,20 +44,12 @@ export default async function LekarzDzisPage() {
             </div>
 
             <form action={updateVisitStatus.bind(null, v.id)} className="flex gap-2">
-              <select
-                name="status"
-                defaultValue={v.status}
-                className="rounded border p-1 text-sm"
-                style={{ borderColor: 'var(--border-color)' }}
-              >
+              <select name="status" defaultValue={v.status} className="rounded border p-1 text-sm" style={{ borderColor: 'var(--border-color)' }}>
                 <option value="CONFIRMED">Potwierdzona</option>
                 <option value="COMPLETED">Odbyta</option>
                 <option value="CANCELLED">Anulowana</option>
               </select>
-              <button
-                type="submit"
-                className="rounded bg-[var(--text-primary)] px-3 py-1 text-sm text-[var(--bg-primary)]"
-              >
+              <button type="submit" className="rounded bg-[var(--text-primary)] px-3 py-1 text-sm text-[var(--bg-primary)]">
                 Zapisz
               </button>
             </form>

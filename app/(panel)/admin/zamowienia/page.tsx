@@ -1,10 +1,8 @@
 import { prisma } from '@/lib/prisma';
-import { getCmsState } from '@/lib/cmsStore';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminOrdersPage() {
-  const cms = getCmsState();
   let orders: {
     id: string;
     createdAt: Date;
@@ -12,27 +10,17 @@ export default async function AdminOrdersPage() {
     amountGrosze: number;
     status: string;
     items: { quantity: number; service: { name: string } }[];
-  }[] = cms.orders.map((o) => ({
-    id: o.id,
-    createdAt: new Date(o.createdAt),
-    customerEmail: o.customerEmail,
-    amountGrosze: o.amountGrosze,
-    status: o.status,
-    items: o.items.map((i) => ({ quantity: i.quantity, service: { name: i.serviceName } })),
-  }));
+  }[] = [];
 
   if (process.env.DATABASE_URL) {
     try {
-      const dbOrders = await prisma.order.findMany({
+      orders = await prisma.order.findMany({
         orderBy: { createdAt: 'desc' },
         include: { items: { include: { service: true } } },
         take: 100,
       });
-      if (dbOrders.length > 0) {
-        orders = dbOrders;
-      }
     } catch {
-      // Fallback to CMS orders
+      orders = [];
     }
   }
 

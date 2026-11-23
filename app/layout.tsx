@@ -5,7 +5,6 @@ import SiteFooter from '@/components/layout/SiteFooter';
 import AuthProvider from '@/components/auth/AuthProvider';
 import { CartProvider } from '@/components/cart/CartProvider';
 import KillNextPortal from '@/components/dev/KillNextPortal';
-import LiveEditorToolbar from '@/components/cms/LiveEditorToolbar';
 import './globals.css';
 
 const montserrat = Montserrat({
@@ -44,7 +43,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <SiteHeader />
             <div className="flex-1">{children}</div>
             <SiteFooter />
-            <LiveEditorToolbar />
           </CartProvider>
         </AuthProvider>
       </body>
